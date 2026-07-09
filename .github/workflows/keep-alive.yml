@@ -1,0 +1,26 @@
+name: 小源导航保活看守
+
+on:
+  schedule:
+    # 每10分钟运行一次，防止Render免费套餐休眠
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 唤醒 Render 站点
+        run: |
+          echo "🔄 正在唤醒 xiaoyuan-nav..."
+          curl -s -o /dev/null -w "  Render:  HTTP %{http_code}\n" "https://xiaoyuan-nav.onrender.com/" || echo "  Render:  无响应(可能正在部署)"
+
+      - name: 也保活 GitHub Pages (以防万一)
+        run: |
+          curl -s -o /dev/null -w "  GH Pages: HTTP %{http_code}\n" "https://haodiyuan888-sketch.github.io/xiaoyuan-nav/" || echo "  GH Pages: 无响应"
+
+      - name: 报告结果
+        run: |
+          echo ""
+          echo "✅ 看守任务完成 — $(date -u)"
+          echo "📡 xiaoyuan-nav.onrender.com 已唤醒"
