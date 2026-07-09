@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
-<link rel="dns-prefetch" href="https://www.google.com">
-<link rel="preconnect" href="https://www.google.com" crossorigin>
 <script>
 // 防止移动端初始横向溢出
 document.documentElement.style.overflowX = 'hidden';
@@ -1296,16 +1294,16 @@ function getDomain(url) {
   try { return new URL(url).hostname; } catch(e) { return ''; }
 }
 
-// 三重favicon源：Google → 直接favicon.ico → DuckDuckGo
+// favicon源：网站自身favicon.ico → 国内API → 首字兜底
 function faviconUrl(url) {
   const domain = getDomain(url);
   if (!domain) return '';
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+  return `https://${domain}/favicon.ico`;
 }
 function faviconBackup(url) {
   const domain = getDomain(url);
   if (!domain) return '';
-  return `https://${domain}/favicon.ico`;
+  return `https://api.iowen.cn/favicon/${domain}`;
 }
 
 const avatarColors = [
