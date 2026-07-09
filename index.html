@@ -1329,13 +1329,8 @@ function makeLinks(links, fallbackEmoji) {
   }).join('');
 }
 
-// ========== 免责声明关闭（永久） ==========
+// ========== 免责声明关闭（刷新后重新显示） ==========
 function dismissDisclaimer() {
-  const banner = document.getElementById('disclaimerBanner');
-  if (banner) banner.classList.add('dismissed');
-  localStorage.setItem('disclaimer_closed', '1');
-}
-if (localStorage.getItem('disclaimer_closed') === '1') {
   const banner = document.getElementById('disclaimerBanner');
   if (banner) banner.classList.add('dismissed');
 }
