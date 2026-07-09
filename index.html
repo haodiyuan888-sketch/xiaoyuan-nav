@@ -99,14 +99,6 @@ body::before {
   padding: clamp(20px, 4vw, 36px) 0 6px;
 }
 
-.hero-top {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
 .hero .logo {
   font-size: clamp(28px, 6vw, 46px);
   font-weight: 900;
@@ -118,44 +110,6 @@ body::before {
   filter: drop-shadow(0 2px 4px rgba(99,102,241,0.3));
 }
 
-.hero-repair-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1.5px solid var(--accent);
-  background: var(--card-bg);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  font-family: var(--font);
-  white-space: nowrap;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.hero-repair-btn:hover {
-  background: var(--accent);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
-}
-
-.hero-repair-btn:hover .hero-repair-hint { color: rgba(255,255,255,0.8); }
-
-.hero-repair-btn:active { transform: scale(0.95); }
-
-.hero-repair-hint {
-  font-size: 10px;
-  font-weight: 400;
-  opacity: 0.65;
-}
-
 .hero .slogan {
   font-size: clamp(12px, 2vw, 14px);
   color: var(--text-secondary);
@@ -163,11 +117,6 @@ body::before {
   margin-top: 2px;
 }
 
-@media (max-width: 480px) {
-  .hero-repair-btn { padding: 5px 11px; font-size: 12px; }
-  .hero-repair-hint { display: none; }
-  .hero-top { gap: 8px; }
-}
 
 /* ========== 搜索区域 ========== */
 .search-section {
@@ -805,13 +754,7 @@ body::before {
 
   <!-- 头部 -->
   <div class="hero">
-    <div class="hero-top">
-      <div class="logo">小源导航</div>
-      <button class="hero-repair-btn" onclick="forceRepair()">
-        🔧<span class="hero-repair-text"> 一键修复</span>
-        <span class="hero-repair-hint">检测并替换失效链接</span>
-      </button>
-    </div>
+    <div class="logo">小源导航</div>
     <div class="slogan">上网，从小源导航页开始！</div>
   </div>
 
@@ -1005,8 +948,6 @@ body::before {
   <span>&copy; 2026 小源导航</span>
   <br>
   <span style="font-size:11px;">本站为非商业性个人导航页，收录链接归原作者所有</span>
-  <span class="divider">|</span>
-  <span style="font-size:11px;" id="lastCheck">上次检测：等待中...</span>
   <br><br>
   <div style="max-width:800px;margin:0 auto;text-align:left;font-size:11px;color:#1a1a1a;line-height:1.9;padding:12px 16px;background:rgba(0,0,0,0.04);border-radius:10px;border-left:3px solid #f44336;">
     <strong style="color:#d32f2f;font-size:13px;">⚠️ 免责声明</strong><br>
@@ -1388,21 +1329,16 @@ function makeLinks(links, fallbackEmoji) {
   }).join('');
 }
 
-// ========== 免责声明关闭 ==========
+// ========== 免责声明关闭（永久） ==========
 function dismissDisclaimer() {
   const banner = document.getElementById('disclaimerBanner');
   if (banner) banner.classList.add('dismissed');
-  // 24小时后再次显示
-  localStorage.setItem('disclaimer_dismissed', Date.now());
+  localStorage.setItem('disclaimer_closed', '1');
 }
-// 检查是否在24小时内已关闭
-(function(){
-  const dismissed = localStorage.getItem('disclaimer_dismissed');
-  if (dismissed && (Date.now() - dismissed) < 86400000) {
-    const banner = document.getElementById('disclaimerBanner');
-    if (banner) banner.classList.add('dismissed');
-  }
-})();
+if (localStorage.getItem('disclaimer_closed') === '1') {
+  const banner = document.getElementById('disclaimerBanner');
+  if (banner) banner.classList.add('dismissed');
+}
 
 // ========== 多显少折 ==========
 function initFoldButtons() {
@@ -1432,225 +1368,6 @@ function toggleFold(btn) {
 
 setTimeout(initFoldButtons, 100);
 
-// ========== 智能检测 + 自动修复系统 ==========
-const REPAIR_STORAGE_KEY = 'xiaoyuan_repair_state';
-const REPAIR_BACKUP_POOL = {
-  // 追剧站点备用池 — 失效时自动切换
-  'cupfox.app':       ['cupfox.love','bnjxjd.com','cupfox123.com'],
-  'libvio.fun':       ['libvio.cc','libvio.pw','libvio.me','libvio.vip'],
-  '555gy.cc':         ['555dy3.com','555dy.fun','o8tv.com'],
-  'novipnoad.net':    ['novipnoad.com','noadvideo.net'],
-  'nbyy.tv':          ['nbyy.cc','nbyy2.tv'],
-  'ddys.tv':          ['ddys.art','ddys.site','ddrk.me'],
-  'gaze.run':         ['gaze.tv','gazerun.com'],
-  'kptv.app':         ['kptv.cc','kptv2.app'],
-  'silidm.com':       ['silidm.cc','silidm2.com'],
-  'kanjuww.com':      ['kanjub.cc','kanju8.com'],
-  // 动漫站点备用池
-  'omofun.link':      ['omofuns.xyz','omofun.in','omofun11.top'],
-  'agedm.org':        ['agedm.me','agedm1.com','m.agedm.com.cn'],
-  'yhdm.one':         ['295yhw.com','yhmgo.com','zkk79.com'],
-  'dm530.org':        ['fengchedmp.com','xdm530.com'],
-  'zzzfun.one':       ['zzzfun.app','zzzfun2.one'],
-  'cycdm01.top':      ['cycanime.com','cycani.org','cycity.pro'],
-  'huazidm.com':      ['huazidm.cc','huazidm2.com'],
-  'xfani.com':        ['dick.xfani.com','xfani2.com'],
-  'catw.moe':         ['catw2.moe','catw3.moe'],
-  'gugu3.com':        ['gugu4.com','gugu5.com'],
-  // 漫画站点备用池
-  'manhua.dmzj.com':  ['dmzj.com','idmzj.com','comic.idmzj.com'],
-  'mangacopy.com':    ['copymanga.site','copymanga.tv','mangacopy.org'],
-  'baozimh.com':      ['cn.baozimh.com','baozimhcn.com'],
-  'colamanga.com':    ['cocomanga.com','colamanga2.com'],
-  'manhuagui.com':    ['mhgui.com','tw.manhuagui.com'],
-  // 小说站点备用池
-  'qidian.com':       ['m.qidian.com','qidian.cn'],
-  'jjwxc.net':        ['jjwxc.com','m.jjwxc.net'],
-  'qimao.com':        ['m.qimao.com','qimao.cn'],
-  'fanqienovel.com':  ['fanqiebook.com','novel.snssdk.com']
-};
-
-// 持久化：记住修复后有效的URL映射
-function loadRepairMap() {
-  try { return JSON.parse(localStorage.getItem(REPAIR_STORAGE_KEY)) || {}; }
-  catch(e) { return {}; }
-}
-function saveRepairMap(map) {
-  try { localStorage.setItem(REPAIR_STORAGE_KEY, JSON.stringify(map)); }
-  catch(e) {}
-}
-
-// 获取备选URL列表
-function getBackupUrls(url) {
-  try {
-    const host = new URL(url).hostname.replace('www.','');
-    const pool = REPAIR_BACKUP_POOL[host] || [];
-    // 也检查带www的变体
-    const alt = 'www.' + host;
-    return [...pool, ...(REPAIR_BACKUP_POOL[alt] || [])];
-  } catch(e) { return []; }
-}
-
-// 单站点检测（返回可用URL或null）
-async function probeUrl(url) {
-  try {
-    await fetch(url, { mode: 'no-cors', signal: AbortSignal.timeout(5000) });
-    return url;
-  } catch(e) { return null; }
-}
-
-// 智能检测+自动修复单个卡片
-async function checkAndRepairCard(card) {
-  const currentUrl = card.dataset.url;
-  if (!currentUrl) return { status: 'skip' };
-
-  // 检测当前URL
-  const currentOk = await probeUrl(currentUrl);
-  if (currentOk) {
-    card.classList.remove('site-down');
-    card.dataset.url = currentUrl;
-    card.href = currentUrl;
-    return { status: 'ok', url: currentUrl };
-  }
-
-  // 当前失效 → 尝试备用池
-  const backups = getBackupUrls(currentUrl);
-  for (const domain of backups) {
-    const testUrl = (domain.startsWith('http') ? domain : 'https://' + domain);
-    const ok = await probeUrl(testUrl);
-    if (ok) {
-      // 修复成功！
-      card.dataset.url = ok;
-      card.href = ok;
-      card.classList.remove('site-down');
-      card.title = card.querySelector('.link-name')?.textContent + ' [已自动修复]';
-      return { status: 'repaired', oldUrl: currentUrl, newUrl: ok };
-    }
-  }
-
-  // 全部失败
-  card.classList.add('site-down');
-  return { status: 'down', url: currentUrl };
-}
-
-// 全站检测+修复
-let lastCheckTime = null;
-let repairStats = { ok:0, repaired:0, down:0, total:0 };
-
-async function checkAllSites() {
-  const cards = document.querySelectorAll('.link-card[data-url]');
-  repairStats = { ok:0, repaired:0, down:0, total: cards.length };
-  const batchSize = 4;
-
-  for (let i = 0; i < cards.length; i += batchSize) {
-    const batch = Array.from(cards).slice(i, i + batchSize);
-    const results = await Promise.allSettled(batch.map(checkAndRepairCard));
-    results.forEach(r => {
-      if (r.status === 'fulfilled') {
-        if (r.value.status === 'ok') repairStats.ok++;
-        else if (r.value.status === 'repaired') repairStats.repaired++;
-        else if (r.value.status === 'down') repairStats.down++;
-      }
-    });
-  }
-
-  lastCheckTime = new Date();
-  updateRepairUI();
-  console.log(`[小源] 检测完成：${repairStats.total}个 | ✅正常${repairStats.ok} | 🔧修复${repairStats.repaired} | ❌离线${repairStats.down}`);
-}
-
-// 更新检测状态UI
-function updateRepairUI() {
-  const el = document.getElementById('lastCheck');
-  if (!el) return;
-  const time = lastCheckTime ? lastCheckTime.toLocaleTimeString('zh-CN',{hour12:false}) : '--:--:--';
-  let status = `上次检测：${time} | ✅${repairStats.ok} | `;
-  if (repairStats.repaired > 0) status += `🔧修复${repairStats.repaired} | `;
-  if (repairStats.down > 0) status += `❌离线${repairStats.down}`;
-  el.textContent = status;
-}
-
-// 一键修复
-// 修复指定栏目的所有链接
-async function repairSection(gridId, name) {
-  const grid = document.getElementById(gridId);
-  if (!grid) return null;
-  const cards = grid.querySelectorAll('.link-card[data-url]');
-  let ok = 0, repaired = 0, down = 0;
-  const batchSize = 4;
-  for (let i = 0; i < cards.length; i += batchSize) {
-    const batch = Array.from(cards).slice(i, i + batchSize);
-    const results = await Promise.allSettled(batch.map(checkAndRepairCard));
-    results.forEach(r => {
-      if (r.status === 'fulfilled') {
-        if (r.value.status === 'ok') ok++;
-        else if (r.value.status === 'repaired') repaired++;
-        else if (r.value.status === 'down') down++;
-      }
-    });
-  }
-  return { name, total: cards.length, ok, repaired, down };
-}
-
-async function forceRepair() {
-  const btn = document.querySelector('.hero-repair-btn');
-  if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
-
-  showToast('🔧 正在检测全站链接...', 60000);
-
-  const sections = [
-    { id: 'searchInfoLinks', name: '🔍搜索' },
-    { id: 'learnLinks',      name: '📖学习' },
-    { id: 'workLinks',       name: '💼职场' },
-    { id: 'lifeShopLinks',   name: '🏠生活' },
-    { id: 'socialFunLinks',  name: '🎮娱乐' },
-    { id: 'payLinks',        name: '💰金融' },
-    { id: 'utilLinks',       name: '🛠️工具' },
-    { id: 'commonLinks',     name: '⭐常用' },
-    { id: 'aiLinks',         name: '🤖AI' },
-    { id: 'designLinks',     name: '🎨设计' },
-    { id: 'devLinks',        name: '💻开发' }
-  ];
-
-  const results = [];
-  for (const s of sections) {
-    const r = await repairSection(s.id, s.name);
-    if (r) results.push(r);
-  }
-
-  // 汇总
-  const totalOk = results.reduce((s,r) => s + r.ok, 0);
-  const totalFixed = results.reduce((s,r) => s + r.repaired, 0);
-  const totalDown = results.reduce((s,r) => s + r.down, 0);
-  const totalAll = results.reduce((s,r) => s + r.total, 0);
-
-  // 明细
-  const lines = results.map(r =>
-    `${r.name}: ✅${r.ok} 🔧${r.repaired} ❌${r.down}`
-  );
-
-  let msg;
-  if (totalFixed > 0) {
-    msg = `✅ 修复完成！共 ${totalAll} 个站点，修复 ${totalFixed} 个失效链接\n${lines.join(' | ')}`;
-  } else if (totalDown === 0) {
-    msg = `✅ 全部 ${totalAll} 个站点正常！`;
-  } else {
-    msg = `⚠️ ${totalDown} 个站点离线，其余正常`;
-  }
-
-  showToast(msg, 8000);
-
-  // 更新底部状态
-  repairStats = { ok: totalOk, repaired: totalFixed, down: totalDown, total: totalAll };
-  lastCheckTime = new Date();
-  updateRepairUI();
-
-  if (btn) { btn.disabled = false; btn.style.opacity = ''; }
-}
-
-// 页载3秒首检，之后每15分钟重检
-setTimeout(checkAllSites, 3000);
-setInterval(checkAllSites, 900000);
 
 // 破解栏目
 document.getElementById('crackLinks').innerHTML = makeLinks([
