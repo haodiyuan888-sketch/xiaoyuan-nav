@@ -2,25 +2,43 @@ name: 小源导航保活看守
 
 on:
   schedule:
-    # 每10分钟运行一次，防止Render免费套餐休眠
-    - cron: '*/10 * * * *'
+    # 每5分钟运行（GitHub Actions最低间隔），防止Render 15分钟休眠
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 jobs:
   keep-alive:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
     steps:
-      - name: 唤醒 Render 站点
+      - name: 第1次唤醒 Render
         run: |
-          echo "🔄 正在唤醒 xiaoyuan-nav..."
-          curl -s -o /dev/null -w "  Render:  HTTP %{http_code}\n" "https://xiaoyuan-nav.onrender.com/" || echo "  Render:  无响应(可能正在部署)"
+          curl -s -o /dev/null -w "  Render-1: HTTP %{http_code}\n" \
+            -H "User-Agent: KeepAlive/1.0" \
+            "https://xiaoyuan-nav.onrender.com/" || echo "  Render-1: 无响应"
 
-      - name: 也保活 GitHub Pages (以防万一)
+      - name: 等待2秒后第2次确认
         run: |
-          curl -s -o /dev/null -w "  GH Pages: HTTP %{http_code}\n" "https://haodiyuan888-sketch.github.io/xiaoyuan-nav/" || echo "  GH Pages: 无响应"
+          sleep 2
+          curl -s -o /dev/null -w "  Render-2: HTTP %{http_code}\n" \
+            -H "User-Agent: KeepAlive/1.0" \
+            "https://xiaoyuan-nav.onrender.com/" || echo "  Render-2: 无响应"
 
-      - name: 报告结果
+      - name: 第3次巩固唤醒
+        run: |
+          sleep 2
+          curl -s -o /dev/null -w "  Render-3: HTTP %{http_code}\n" \
+            -H "User-Agent: KeepAlive/1.0" \
+            "https://xiaoyuan-nav.onrender.com/" || echo "  Render-3: 无响应"
+
+      - name: 保活 GitHub Pages
+        run: |
+          curl -s -o /dev/null -w "  GH Pages: HTTP %{http_code}\n" \
+            "https://haodiyuan888-sketch.github.io/xiaoyuan-nav/" || echo "  GH Pages: 无响应"
+
+      - name: 结果报告
         run: |
           echo ""
-          echo "✅ 看守任务完成 — $(date -u)"
-          echo "📡 xiaoyuan-nav.onrender.com 已唤醒"
+          echo "✅ 看守完成 — $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "📡 已连续3次唤醒 xiaoyuan-nav.onrender.com"
