@@ -850,40 +850,64 @@ body::before {
     <div class="link-grid" id="crackLinks"></div>
   </div>
 
-  <!-- 追剧栏目 -->
+  <!-- 购物平台 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">📺</span>追剧栏目<span class="count">91个</span></div>
-    <div class="link-grid link-grid-fold" id="tvLinks"></div>
-    <div class="fold-toggle-wrap">
-      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="tvLinks">展开 ▾</button>
-    </div>
+    <div class="section-title"><span class="icon">🛒</span>购物平台<span class="count">12个</span></div>
+    <div class="link-grid" id="shopLinks"></div>
   </div>
 
-  <!-- 动漫剧场 -->
+  <!-- 外卖美食 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">🎬</span>动漫剧场<span class="count">73个</span></div>
-    <div class="link-grid link-grid-fold" id="animeLinks"></div>
-    <div class="fold-toggle-wrap">
-      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="animeLinks">展开 ▾</button>
-    </div>
+    <div class="section-title"><span class="icon">🍔</span>外卖美食<span class="count">10个</span></div>
+    <div class="link-grid" id="foodLinks"></div>
   </div>
 
-  <!-- 漫画 -->
+  <!-- 社交平台 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">📖</span>漫画<span class="count">33个</span></div>
-    <div class="link-grid link-grid-fold" id="mangaLinks"></div>
-    <div class="fold-toggle-wrap">
-      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="mangaLinks">展开 ▾</button>
-    </div>
+    <div class="section-title"><span class="icon">📱</span>社交平台<span class="count">12个</span></div>
+    <div class="link-grid" id="socialLinks"></div>
   </div>
 
-  <!-- 小说 -->
+  <!-- 视频娱乐 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">📚</span>小说<span class="count">40个</span></div>
-    <div class="link-grid link-grid-fold" id="novelLinks"></div>
-    <div class="fold-toggle-wrap">
-      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="novelLinks">展开 ▾</button>
-    </div>
+    <div class="section-title"><span class="icon">🎬</span>视频娱乐<span class="count">12个</span></div>
+    <div class="link-grid" id="videoLinks"></div>
+  </div>
+
+  <!-- 音乐平台 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🎵</span>音乐平台<span class="count">8个</span></div>
+    <div class="link-grid" id="musicLinks"></div>
+  </div>
+
+  <!-- 出行旅游 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">✈️</span>出行旅游<span class="count">12个</span></div>
+    <div class="link-grid" id="travelLinks"></div>
+  </div>
+
+  <!-- 生活服务 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🏠</span>生活服务<span class="count">12个</span></div>
+    <div class="link-grid" id="lifeLinks"></div>
+  </div>
+
+  <!-- 金融理财 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">💰</span>金融理财<span class="count">12个</span></div>
+    <div class="link-grid" id="financeLinks"></div>
+  </div>
+
+  <!-- 新闻资讯 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">📰</span>新闻资讯<span class="count">10个</span></div>
+    <div class="link-grid" id="newsLinks"></div>
+  </div>
+
+  <!-- 学习教育 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">📚</span>学习教育<span class="count">12个</span></div>
+    <div class="link-grid" id="eduLinks"></div>
   </div>
 
   <!-- 常用导航 -->
@@ -1596,13 +1620,26 @@ async function forceRepair() {
   const btn = document.querySelector('.hero-repair-btn');
   if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
 
-  showToast('🔧 正在修复追剧/动漫/漫画/小说...', 60000);
+  showToast('🔧 正在检测全站链接...', 60000);
 
   const sections = [
-    { id: 'tvLinks',    name: '📺 追剧栏目' },
-    { id: 'animeLinks', name: '🎬 动漫剧场' },
-    { id: 'mangaLinks', name: '📖 漫画' },
-    { id: 'novelLinks', name: '📚 小说' }
+    { id: 'shopLinks',   name: '🛒购物' },
+    { id: 'foodLinks',   name: '🍔外卖' },
+    { id: 'socialLinks', name: '📱社交' },
+    { id: 'videoLinks',  name: '🎬视频' },
+    { id: 'musicLinks',  name: '🎵音乐' },
+    { id: 'travelLinks', name: '✈️出行' },
+    { id: 'lifeLinks',   name: '🏠生活' },
+    { id: 'financeLinks',name: '💰金融' },
+    { id: 'newsLinks',   name: '📰新闻' },
+    { id: 'eduLinks',    name: '📚学习' },
+    { id: 'commonLinks', name: '⭐常用' },
+    { id: 'aiLinks',     name: '🤖AI' },
+    { id: 'designLinks', name: '🎨设计' },
+    { id: 'storageLinks',name: '☁️存储' },
+    { id: 'toolLinks',   name: '🔧工具' },
+    { id: 'devLinks',    name: '💻开发' },
+    { id: 'gameLinks',   name: '🎮游戏' }
   ];
 
   const results = [];
@@ -1650,265 +1687,156 @@ document.getElementById('crackLinks').innerHTML = makeLinks([
   {name:'小源音乐',url:'https://xiaoyuan-player.onrender.com/'}
 ], '🎵');
 
-// 追剧栏目（每30分钟自动检测）
-document.getElementById('tvLinks').innerHTML = makeLinks([
-  {name:'NO视频',url:'https://www.novipnoad.net/'},
-  {name:'爱看机器人',url:'https://v.aikanbot.com/billboard.html'},
-  {name:'注视影视',url:'https://gaze.run/'},
-  {name:'91毒舌电影',url:'https://www.duse0.com/'},
-  {name:'金牌影院',url:'https://www.x8kb9k8.com/'},
-  {name:'Cloud影视',url:'https://www.tvfans.top/'},
-  {name:'影猫の仓库',url:'https://ymck.pro/'},
-  {name:'Vision TV+',url:'https://www.visiontv.club/'},
-  {name:'4K在线',url:'https://www.bbibi.cc/'},
-  {name:'看片TV',url:'https://kptv.app/'},
-  {name:'光速影视',url:'https://www.yingshiso.link/'},
-  {name:'660F',url:'https://www.660f.com/'},
-  {name:'好好看',url:'https://www.hhkan2.com/'},
-  {name:'奈飞中文',url:'https://naifei2.org/'},
-  {name:'天天追剧',url:'https://ttzj123.com/'},
-  {name:'秀儿影视',url:'https://xiuer.pro/'},
-  {name:'看剧吧',url:'https://kanjub.cc/'},
-  {name:'爱迪影视',url:'https://adys.tv/'},
-  {name:'飞映网',url:'https://fy126.com/'},
-  {name:'欧飞',url:'https://ofiii.com/'},
-  {name:'河狸影视',url:'https://heli888.cc/'},
-  {name:'星辰影院',url:'https://xcvods.com/'},
-  {name:'优质资源库',url:'https://1080zyk3.com/'},
-  {name:'私人影院',url:'https://siren93.com/'},
-  {name:'追影猫',url:'https://zhuiyingmao5.com/'},
-  {name:'LIBVIO',url:'https://libvio.fun/'},
-  {name:'麦田影院',url:'https://mtyy1.com/'},
-  {name:'影视大全',url:'https://kanys6.com/'},
-  {name:'蚂蚁影视',url:'https://xmyxjx.com/'},
-  {name:'饭团影视',url:'https://fantuansjz.com/'},
-  {name:'电影先生',url:'https://silidm.com/'},
-  {name:'看剧网',url:'https://kanjuww.com/'},
-  {name:'51搜剧',url:'https://51souju1.com/'},
-  {name:'555电影',url:'https://555gy.cc/'},
-  {name:'蛋蛋赞影院',url:'https://dandanzan.me/'},
-  {name:'可可影视',url:'https://kkys01.com/'},
-  {name:'土木追剧',url:'https://tumizj.com/'},
-  {name:'影音星球',url:'https://yxxq3.cc/'},
-  {name:'电影人生',url:'https://dyrsok.com/'},
-  {name:'布布影视',url:'https://bubuyingshi.com/'},
-  {name:'一起影视',url:'https://yiqiys.com/'},
-  {name:'80s电影网',url:'https://1caishang.com/'},
-  {name:'厂长资源',url:'https://czzy77.com/'},
-  {name:'修罗影视',url:'https://xl01.com.de/'},
-  {name:'片吧',url:'https://pbpb.tv/'},
-  {name:'KP狂人',url:'https://kpkuang.netlify.app/'},
-  {name:'剧多多',url:'https://jddzx.com/'},
-  {name:'502搜索',url:'https://502b.com/'},
-  {name:'4K影视',url:'https://4kvm.org/'},
-  {name:'茶杯狐',url:'https://cupfox.app/'},
-  {name:'奈飞工厂',url:'https://netflixgc.com/'},
-  {name:'低端影视',url:'https://ddys.tv/'},
-  {name:'韩剧之家',url:'https://hjzj2.com/'},
-  {name:'爱韩范',url:'https://ihanfan.net/'},
-  {name:'TVB云播',url:'https://tvyun07.com/'},
-  {name:'港剧屋',url:'https://gangju5.cc/'},
-  {name:'港剧天堂',url:'https://gjtt.net/'},
-  {name:'粤语天堂',url:'https://yueyutt.com/'},
-  {name:'粤语影院',url:'https://yueyuy.com/'},
-  {name:'粤语屋',url:'https://yueyuw.cc/'},
-  {name:'日剧网',url:'https://tvjp.tv/'},
-  {name:'日剧跑',url:'https://rijiupao.com/'},
-  {name:'日剧TV',url:'https://zysfj.cn/'},
-  {name:'心动日剧',url:'https://doki8.net/'},
-  {name:'天天美剧',url:'https://ttmja.com/'},
-  {name:'美剧网',url:'https://meijufan.com/'},
-  {name:'美剧迷',url:'https://meijumi.net/'},
-  {name:'电影天堂',url:'https://dytt8.net/'},
-  {name:'BD影视',url:'https://bdjuhe.com/'},
-  {name:'泰剧TV',url:'https://shierli.com/'},
-  {name:'泰剧网',url:'https://taijut.com/'},
-  {name:'电影狗',url:'https://dyg2024.com/'},
-  {name:'影视森林',url:'https://549.tv/'},
-  {name:'搜片',url:'https://soupian.pro/'},
-  {name:'7080影视搜',url:'https://7080.wang/'},
-  {name:'影剧搜',url:'https://yingjuso.com/'},
-  {name:'新电影导航',url:'https://xdy.me/'},
-  {name:'迅雷电影天堂',url:'https://xunlei8.org/'},
-  {name:'艾达杂货铺',url:'https://adzhp.cc/'},
-  {name:'西影网',url:'https://1958xy.com/'},
-  {name:'猫狸盘搜',url:'https://kkkob.com/'},
-  {name:'易搜',url:'https://yiso.fun/'},
-  {name:'盘搜搜',url:'https://pansousou.org/'},
-  {name:'懒盘搜索',url:'https://lzpanx.com/'},
-  {name:'爱盘搜',url:'https://aipanso.com/'},
-  {name:'团长资源',url:'https://tzfile.com/'},
-  {name:'人人电影网',url:'https://rrdynb.com/'},
-  {name:'夸克吧',url:'https://kuakeba.com/'},
-  {name:'热盘搜',url:'https://repanso.com/'},
-  {name:'混合盘',url:'https://hunhepan.com/'},
-  {name:'捕娱兔',url:'https://buyutu.com/'},
-  {name:'502so',url:'https://502so.com/'},
-  {name:'夸克盘搜',url:'https://panso.xyz/'},
-  {name:'好剧搜',url:'https://pan.hyexz.com/'},
-  {name:'河马剧场',url:'https://kuaikaw.cn/'},
-  {name:'五五短剧',url:'https://duanju55.com/'},
-  {name:'短剧库',url:'https://duanjuku.top/'},
-  {name:'央视频',url:'https://yangshipin.cn/'},
-  {name:'1905电影网',url:'https://1905.com/'},
-  {name:'搜狐视频',url:'https://tv.sohu.com/'},
-  {name:'咪咕视频',url:'https://miguvideo.com/'}
-], '📺');
+// 购物平台
+document.getElementById('shopLinks').innerHTML = makeLinks([
+  {name:'淘宝',url:'https://www.taobao.com/'},
+  {name:'京东',url:'https://www.jd.com/'},
+  {name:'拼多多',url:'https://www.pinduoduo.com/'},
+  {name:'天猫',url:'https://www.tmall.com/'},
+  {name:'唯品会',url:'https://www.vip.com/'},
+  {name:'苏宁易购',url:'https://www.suning.com/'},
+  {name:'闲鱼',url:'https://www.goofish.com/'},
+  {name:'1688',url:'https://www.1688.com/'},
+  {name:'得物',url:'https://www.dewu.com/'},
+  {name:'当当网',url:'https://www.dangdang.com/'},
+  {name:'网易严选',url:'https://you.163.com/'},
+  {name:'小米商城',url:'https://www.mi.com/'}
+], '🛒');
 
-// 动漫剧场（国内可访问，每30分钟自动检测）
-document.getElementById('animeLinks').innerHTML = makeLinks([
-  {name:'小爆虾次元',url:'https://xiaobaoxia.com/acg.html'},
-  {name:'橘子动漫',url:'https://www.jzacg.com/'},
-  {name:'AGE动漫',url:'https://www.agedm.org/'},
-  {name:'异世界动漫',url:'https://www.dmmiku.com/'},
-  {name:'動畫線上看',url:'https://anime1.me/'},
-  {name:'稀饭动漫',url:'https://dick.xfani.com/'},
-  {name:'饭团动漫',url:'https://acgfta.com/'},
-  {name:'樱之空动漫',url:'https://www.skr2.cc/'},
-  {name:'番组放送',url:'https://bgmlist.com/'},
-  {name:'次元派对',url:'https://www.acg.party/'},
-  {name:'趣动漫',url:'https://www.qdm66.com/'},
-  {name:'佩可爱动漫',url:'https://pekolove.com/'},
-  {name:'咕咕番',url:'https://www.gugu3.com/'},
-  {name:'番薯动漫',url:'https://www.fsdm02.com/'},
-  {name:'MX动漫',url:'https://www.mxdm.xyz/'},
-  {name:'MX动漫②',url:'https://www.mxdm9.cc/'},
-  {name:'久久动漫',url:'http://www.995dm.com/'},
-  {name:'酷酷兔',url:'http://kukutu8.top/'},
-  {name:'girigiri爱',url:'https://anime.girigirilove.com/'},
-  {name:'AcFun',url:'https://www.acfun.cn/'},
-  {name:'MuteFun',url:'https://www.mute01.com/'},
-  {name:'漫搜搜',url:'https://msousou.vip/'},
-  {name:'Bangumi',url:'https://bangumi.tv/'},
-  {name:'NT动漫',url:'https://www.ntdm9.com/'},
-  {name:'虾皮动漫',url:'https://xiapidm.com/'},
-  {name:'花子动漫',url:'https://www.huazidm.com/'},
-  {name:'柒番',url:'https://www.qifun.cc/'},
-  {name:'OmoFun',url:'https://omofun.link/'},
-  {name:'菲特动漫',url:'https://fitacg.com/'},
-  {name:'路漫漫①',url:'https://dm.g916.com/'},
-  {name:'路漫漫②',url:'https://www.lmm82.com/'},
-  {name:'风车动漫',url:'https://dm530.org/'},
-  {name:'动漫岛①',url:'https://www.dmand5.com/'},
-  {name:'动漫岛②',url:'https://rentry.org/dmd8/'},
-  {name:'哔咪动漫',url:'https://www.bimiacg14.net/'},
-  {name:'奇奇动漫',url:'https://qiqidm7.com/'},
-  {name:'次元狗动漫',url:'https://www.acgndog.com/'},
-  {name:'动漫妖',url:'https://www.dmyao.com/'},
-  {name:'风之动漫',url:'https://www.fffdm.com/'},
-  {name:'奇米奇米',url:'https://www.qimiqimi.net/'},
-  {name:'Animeko',url:'https://myani.org/'},
-  {name:'五弹幕',url:'https://www.5dm.link/'},
-  {name:'新世界动漫',url:'http://www.x4jdm.top/'},
-  {name:'次元城①',url:'https://www.cycanime.com/'},
-  {name:'次元城②',url:'https://www.cycani.org/'},
-  {name:'奇漫岛',url:'https://www.qimandao.com/'},
-  {name:'XDM动漫',url:'https://www.xuandm.com/'},
-  {name:'橘子ACG',url:'https://www.mgnacg.com/'},
-  {name:'拉拉动漫',url:'https://www.acglala.cc/'},
-  {name:'233动漫',url:'https://www.661dm.com/'},
-  {name:'P站番剧',url:'https://tv.pilipili6.top/'},
-  {name:'AnimeTosho',url:'https://animetosho.org/'},
-  {name:'MUTE FUN',url:'https://www.mutean.com/'},
-  {name:'樱花动漫①',url:'https://www.295yhw.com/'},
-  {name:'樱花动漫②',url:'https://www.yinhuadm.vip/'},
-  {name:'樱花动漫③',url:'https://yhdm.one/'},
-  {name:'风车动漫②',url:'https://fengchedmp.com/'},
-  {name:'风车动漫③',url:'http://www.xdm530.com/'},
-  {name:'AkiAnime①',url:'https://www.akianime.cc/'},
-  {name:'AkiAnime②',url:'https://www.akianime.com/'},
-  {name:'嗷呜动漫',url:'https://www.aowu.tv/'},
-  {name:'哈密瓜动漫',url:'https://hmgdm.com/'},
-  {name:'NT动漫②',url:'https://www.ntdm9.com/'},
-  {name:'NyaFun',url:'https://nyadm01.com/'},
-  {name:'Animoe',url:'https://animoe.org/'},
-  {name:'clicli动漫',url:'https://clicli.pro/'},
-  {name:'二矿动漫',url:'https://2kuang.com/'},
-  {name:'漫岛',url:'https://mandao.cc/'},
-  {name:'不可视境界线',url:'https://invbo.top/'},
-  {name:'MUTE FUN②',url:'https://mutedm.com/'},
-  {name:'樱花动漫④',url:'https://yhmgo.com/'}
+// 外卖美食
+document.getElementById('foodLinks').innerHTML = makeLinks([
+  {name:'美团外卖',url:'https://waimai.meituan.com/'},
+  {name:'饿了么',url:'https://www.ele.me/'},
+  {name:'美团',url:'https://www.meituan.com/'},
+  {name:'大众点评',url:'https://www.dianping.com/'},
+  {name:'肯德基',url:'https://www.kfc.com.cn/'},
+  {name:'麦当劳',url:'https://www.mcdonalds.com.cn/'},
+  {name:'星巴克',url:'https://www.starbucks.com.cn/'},
+  {name:'瑞幸咖啡',url:'https://www.luckincoffee.com/'},
+  {name:'海底捞',url:'https://www.haidilao.com/'},
+  {name:'盒马',url:'https://www.freshhema.com/'}
+], '🍔');
+
+// 社交平台
+document.getElementById('socialLinks').innerHTML = makeLinks([
+  {name:'微信',url:'https://wx.qq.com/'},
+  {name:'QQ',url:'https://im.qq.com/'},
+  {name:'微博',url:'https://weibo.com/'},
+  {name:'小红书',url:'https://www.xiaohongshu.com/'},
+  {name:'豆瓣',url:'https://www.douban.com/'},
+  {name:'知乎',url:'https://www.zhihu.com/'},
+  {name:'百度贴吧',url:'https://tieba.baidu.com/'},
+  {name:'抖音',url:'https://www.douyin.com/'},
+  {name:'快手',url:'https://www.kuaishou.com/'},
+  {name:'B站',url:'https://www.bilibili.com/'},
+  {name:'虎扑',url:'https://www.hupu.com/'},
+  {name:'CSDN',url:'https://www.csdn.net/'}
+], '📱');
+
+// 视频娱乐
+document.getElementById('videoLinks').innerHTML = makeLinks([
+  {name:'腾讯视频',url:'https://v.qq.com/'},
+  {name:'爱奇艺',url:'https://www.iqiyi.com/'},
+  {name:'优酷',url:'https://www.youku.com/'},
+  {name:'哔哩哔哩',url:'https://www.bilibili.com/'},
+  {name:'芒果TV',url:'https://www.mgtv.com/'},
+  {name:'西瓜视频',url:'https://www.ixigua.com/'},
+  {name:'CCTV直播',url:'https://tv.cctv.com/live/'},
+  {name:'1905电影网',url:'https://www.1905.com/'},
+  {name:'搜狐视频',url:'https://tv.sohu.com/'},
+  {name:'咪咕视频',url:'https://www.miguvideo.com/'},
+  {name:'央视频',url:'https://yangshipin.cn/'},
+  {name:'抖音网页版',url:'https://www.douyin.com/'}
 ], '🎬');
 
-// 漫画
-document.getElementById('mangaLinks').innerHTML = makeLinks([
-  {name:'动漫之家',url:'https://manhua.dmzj.com/'},
-  {name:'腾讯动漫',url:'https://ac.qq.com/'},
-  {name:'快看漫画',url:'https://www.kuaikanmanhua.com/'},
-  {name:'B站漫画',url:'https://manga.bilibili.com/'},
-  {name:'拷贝漫画',url:'https://www.mangacopy.com/'},
-  {name:'漫画柜',url:'https://www.manhuagui.com/'},
-  {name:'包子漫画',url:'https://cn.baozimh.com/'},
-  {name:'COCO漫画',url:'https://www.colamanga.com/'},
-  {name:'搜漫',url:'https://www.soman.com/'},
-  {name:'漫客栈',url:'https://www.mkzhan.com/'},
-  {name:'知音漫客',url:'https://www.zymk.cn/'},
-  {name:'漫画人',url:'https://www.manhuaren.com/'},
-  {name:'极速漫画',url:'https://www.1kkk.com/'},
-  {name:'MangaBZ',url:'https://www.mangabz.com/'},
-  {name:'亲亲漫画',url:'https://www.acgcd.com/'},
-  {name:'动漫屋',url:'https://www.dm5.com/'},
-  {name:'漫本',url:'https://www.manben.com/'},
-  {name:'36漫画网',url:'https://www.36mh.com/'},
-  {name:'看漫画',url:'https://www.kanman.com/'},
-  {name:'漫漫漫画',url:'https://www.manmanapp.com/'},
-  {name:'酷漫屋',url:'https://www.qiruiyaoye.cn/'},
-  {name:'奇漫屋',url:'https://www.qiman59.com/'},
-  {name:'漫画DB',url:'https://www.manhuadb.com/'},
-  {name:'仙漫网',url:'https://www.xianmanwang.com/'},
-  {name:'xmanhua',url:'https://www.xmanhua.com/'},
-  {name:'滴答漫画',url:'https://didamh.com/'},
-  {name:'无敌漫画',url:'https://m.55dmh.com/'},
-  {name:'咚漫',url:'https://www.dongmanmanhua.cn/'},
-  {name:'哔咔漫画',url:'https://picacgm.com/'},
-  {name:'奇漫岛',url:'https://www.qimandao.com/'},
-  {name:'古风漫画',url:'https://www.gufengmh.com/'},
-  {name:'漫画狗',url:'https://dogemanga.com/'},
-  {name:'COCO漫画②',url:'https://www.cocomanga.com/'}
-], '📖');
+// 音乐平台
+document.getElementById('musicLinks').innerHTML = makeLinks([
+  {name:'网易云音乐',url:'https://music.163.com/'},
+  {name:'QQ音乐',url:'https://y.qq.com/'},
+  {name:'酷狗音乐',url:'https://www.kugou.com/'},
+  {name:'酷我音乐',url:'https://www.kuwo.cn/'},
+  {name:'Spotify',url:'https://www.spotify.com/'},
+  {name:'Apple Music',url:'https://music.apple.com/'},
+  {name:'咪咕音乐',url:'https://music.migu.cn/'},
+  {name:'5sing',url:'https://5sing.kugou.com/'}
+], '🎵');
 
-// 小说
-document.getElementById('novelLinks').innerHTML = makeLinks([
-  {name:'番茄小说',url:'https://fanqienovel.com/'},
-  {name:'七猫小说',url:'https://www.qimao.com/'},
-  {name:'起点中文网',url:'https://www.qidian.com/'},
-  {name:'晋江文学城',url:'https://www.jjwxc.net/'},
-  {name:'微信读书',url:'https://weread.qq.com/'},
-  {name:'QQ阅读',url:'https://book.qq.com/'},
-  {name:'掌阅',url:'https://www.ireader.com/'},
-  {name:'书旗小说',url:'https://www.shuqi.com/'},
-  {name:'17K小说网',url:'https://www.17k.com/'},
-  {name:'塔读小说',url:'https://www.tadu.com/'},
-  {name:'豆瓣阅读',url:'https://read.douban.com/'},
-  {name:'网易蜗牛读书',url:'https://du.163.com/'},
-  {name:'笔趣阁',url:'https://www.biquge.com/'},
-  {name:'顶点小说',url:'https://www.booktxt.net/'},
-  {name:'全本小说',url:'https://www.quanben.com/'},
-  {name:'飘天文学',url:'https://www.piaotian.com/'},
-  {name:'妙笔阁',url:'https://www.miaobige.com/'},
-  {name:'书趣阁',url:'https://www.shuquge.com/'},
-  {name:'棉花糖小说',url:'https://www.mht99.com/'},
-  {name:'纵横中文网',url:'https://www.zongheng.com/'},
-  {name:'飞卢小说',url:'https://www.faloo.com/'},
-  {name:'刺猬猫',url:'https://www.ciweimao.com/'},
-  {name:'黑岩网',url:'https://www.heiyan.com/'},
-  {name:'红薯网',url:'https://www.hongshu.com/'},
-  {name:'逐浪网',url:'https://www.zhulang.com/'},
-  {name:'潇湘书院',url:'https://www.xxsy.net/'},
-  {name:'红袖添香',url:'https://www.hongxiu.com/'},
-  {name:'言情小说吧',url:'https://www.xs8.cn/'},
-  {name:'话本小说',url:'https://www.huaben.com/'},
-  {name:'磨铁中文网',url:'https://www.motie.com/'},
-  {name:'不可能的世界',url:'https://www.8kana.com/'},
-  {name:'疯读小说',url:'https://www.fengdus.com/'},
-  {name:'必看小说',url:'https://www.bikanxs.com/'},
-  {name:'得间小说',url:'https://www.idejian.com/'},
-  {name:'多看阅读',url:'https://www.duokan.com/'},
-  {name:'咪咕阅读',url:'https://www.cmread.com/'},
-  {name:'当当云阅读',url:'https://e.dangdang.com/'},
-  {name:'京东读书',url:'https://e.jd.com/'},
+// 出行旅游
+document.getElementById('travelLinks').innerHTML = makeLinks([
+  {name:'12306',url:'https://www.12306.cn/'},
+  {name:'携程',url:'https://www.ctrip.com/'},
+  {name:'去哪儿',url:'https://www.qunar.com/'},
+  {name:'飞猪',url:'https://www.fliggy.com/'},
+  {name:'高德地图',url:'https://www.amap.com/'},
+  {name:'百度地图',url:'https://map.baidu.com/'},
+  {name:'滴滴出行',url:'https://www.didiglobal.com/'},
+  {name:'哈啰',url:'https://www.hellobike.com/'},
+  {name:'同程旅行',url:'https://www.ly.com/'},
+  {name:'途牛',url:'https://www.tuniu.com/'},
+  {name:'马蜂窝',url:'https://www.mafengwo.cn/'},
+  {name:'航旅纵横',url:'https://www.umetrip.com/'}
+], '✈️');
+
+// 生活服务
+document.getElementById('lifeLinks').innerHTML = makeLinks([
+  {name:'58同城',url:'https://www.58.com/'},
+  {name:'贝壳找房',url:'https://www.ke.com/'},
+  {name:'链家',url:'https://www.lianjia.com/'},
+  {name:'天眼查',url:'https://www.tianyancha.com/'},
+  {name:'企查查',url:'https://www.qcc.com/'},
+  {name:'快递100',url:'https://www.kuaidi100.com/'},
+  {name:'菜鸟',url:'https://www.cainiao.com/'},
+  {name:'国家电网',url:'https://www.95598.cn/'},
+  {name:'中国移动',url:'https://www.10086.cn/'},
+  {name:'中国联通',url:'https://www.10010.com/'},
+  {name:'中国电信',url:'https://www.189.cn/'},
+  {name:'12123交管',url:'https://gab.122.gov.cn/'}
+], '🏠');
+
+// 金融理财
+document.getElementById('financeLinks').innerHTML = makeLinks([
+  {name:'支付宝',url:'https://www.alipay.com/'},
+  {name:'工商银行',url:'https://www.icbc.com.cn/'},
+  {name:'建设银行',url:'https://www.ccb.com/'},
+  {name:'招商银行',url:'https://www.cmbchina.com/'},
+  {name:'农业银行',url:'https://www.abchina.com/'},
+  {name:'中国银行',url:'https://www.boc.cn/'},
+  {name:'东方财富',url:'https://www.eastmoney.com/'},
+  {name:'同花顺',url:'https://www.10jqka.com.cn/'},
+  {name:'雪球',url:'https://xueqiu.com/'},
+  {name:'云闪付',url:'https://www.unionpay.com/'},
+  {name:'京东金融',url:'https://jr.jd.com/'},
+  {name:'微信支付',url:'https://pay.weixin.qq.com/'}
+], '💰');
+
+// 新闻资讯
+document.getElementById('newsLinks').innerHTML = makeLinks([
+  {name:'今日头条',url:'https://www.toutiao.com/'},
+  {name:'腾讯新闻',url:'https://news.qq.com/'},
+  {name:'网易新闻',url:'https://news.163.com/'},
+  {name:'搜狐新闻',url:'https://news.sohu.com/'},
+  {name:'澎湃新闻',url:'https://www.thepaper.cn/'},
+  {name:'36氪',url:'https://36kr.com/'},
+  {name:'虎嗅',url:'https://www.huxiu.com/'},
+  {name:'央视网',url:'https://www.cctv.com/'},
+  {name:'新华网',url:'https://www.xinhuanet.com/'},
+  {name:'人民日报',url:'https://www.people.com.cn/'}
+], '📰');
+
+// 学习教育
+document.getElementById('eduLinks').innerHTML = makeLinks([
+  {name:'中国知网',url:'https://www.cnki.net/'},
+  {name:'百度学术',url:'https://xueshu.baidu.com/'},
+  {name:'中国大学MOOC',url:'https://www.icourse163.org/'},
+  {name:'网易公开课',url:'https://open.163.com/'},
+  {name:'腾讯课堂',url:'https://ke.qq.com/'},
   {name:'得到',url:'https://www.dedao.cn/'},
-  {name:'樊登读书',url:'https://www.fandengread.com/'}
+  {name:'知乎盐选',url:'https://www.zhihu.com/xen/market'},
+  {name:'B站课堂',url:'https://www.bilibili.com/cheese/'},
+  {name:'万方数据',url:'https://www.wanfangdata.com.cn/'},
+  {name:'维普',url:'https://www.cqvip.com/'},
+  {name:'有道词典',url:'https://www.youdao.com/'},
+  {name:'百度翻译',url:'https://fanyi.baidu.com/'}
 ], '📚');
 
 // 常用导航
