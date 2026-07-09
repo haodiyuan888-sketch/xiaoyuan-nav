@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: xiaoyuan-nav
+    env: static
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
