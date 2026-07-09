@@ -966,14 +966,19 @@ body::before {
 <script>
 // ========== 时钟更新 ==========
 function updateClock() {
+  // 北京时间 UTC+8
   const now = new Date();
+  const bjTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
   const weekNames = ['日','一','二','三','四','五','六'];
-  const y = now.getFullYear();
-  const m = now.getMonth() + 1;
-  const d = now.getDate();
-  const w = weekNames[now.getDay()];
+  const y = bjTime.getUTCFullYear();
+  const m = bjTime.getUTCMonth() + 1;
+  const d = bjTime.getUTCDate();
+  const w = weekNames[bjTime.getUTCDay()];
+  const hh = String(bjTime.getUTCHours()).padStart(2,'0');
+  const mm = String(bjTime.getUTCMinutes()).padStart(2,'0');
+  const ss = String(bjTime.getUTCSeconds()).padStart(2,'0');
   document.getElementById('dateStr').textContent = `${y}年${m}月${d}日 星期${w}`;
-  document.getElementById('timeStr').textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
+  document.getElementById('timeStr').textContent = `${hh}:${mm}:${ss}`;
 }
 updateClock();
 setInterval(updateClock, 1000);
@@ -1029,12 +1034,15 @@ function getLunar() {
   const lunarMonthNames = ['正','二','三','四','五','六','七','八','九','十','冬','腊'];
   const lunarDayNames = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
 
+  // 使用北京时间（UTC+8）
   const now = new Date();
-  const y = now.getFullYear();
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000;
+  const bjNow = new Date(utcMs);
+  const y = bjNow.getUTCFullYear();
 
-  // 公历当天距 1900-01-31 的天数（农历1900年正月初一）
-  const base = new Date(1900, 0, 31);
-  let days = Math.floor((now - base) / 86400000);
+  // 公历当天距1900-01-31的天数（农历1900年正月初一，北京时间）
+  const base = Date.UTC(1900, 0, 31, 0, 0, 0) - 8 * 3600000;
+  let days = Math.floor((bjNow.getTime() - base) / 86400000);
 
   // 逐年减去农历年天数，定位农历年份
   let lunarY = 1900;
@@ -1083,91 +1091,91 @@ updateLunarBar();
 setInterval(updateLunarBar, 600000);
 
 // ========== 黄历 ==========
-// ========== 黄历实时计算 ==========
-function calcDayGanZhi(date) {
-  const base = new Date(1900, 0, 1);
-  const days = Math.floor((date - base) / 86400000);
-  const ganIdx = ((days % 10) + 10) % 10;
-  const zhiIdx = ((days % 12) + 10) % 12;
-  return { ganIdx, zhiIdx };
-}
-
+// ========== 黄历实时计算（北京时间 + 中国标准）==========
 const TIAN_GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const DI_ZHI   = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-const SHENG_XIAO = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+
+// 构建60干支索引表（用于纳音查找）
+const GZ_INDEX = {};
+for (let i = 0; i < 60; i++) {
+  GZ_INDEX[TIAN_GAN[i % 10] + DI_ZHI[i % 12]] = i;
+}
+
+// 计算日干支（北京时间 UTC+8，以1900-01-01甲戌日为基准）
+function calcDayGanZhi() {
+  const now = new Date();
+  // 使用UTC+8北京时间计算
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000;
+  const bjDate = new Date(utcMs);
+  const base = Date.UTC(1900, 0, 1, 0, 0, 0) - 8 * 3600000; // 1900-01-01 北京时间00:00
+  const days = Math.floor((bjDate.getTime() - base) / 86400000);
+  // 1900-01-01 = 甲戌日 → gan=甲(0), zhi=戌(10)
+  const ganIdx = ((days % 10) + 10) % 10;
+  const zhiIdx = ((days + 10) % 12 + 12) % 12;
+  return { ganIdx, zhiIdx, gzIndex: ((days % 60) + 60) % 60 };
+}
 
 // 五行: 天干→五行
 const WU_XING_MAP = ['木','木','火','火','土','土','金','金','水','水'];
+
+// 六十甲子纳音（60个，标准中国黄历对照表）
 const WU_XING_NAYIN = [
-  '海中金','炉中火','大林木','路旁土','剑锋金','山头火',
-  '涧下水','城头土','白蜡金','杨柳木','泉中水','屋上土',
-  '霹雳火','松柏木','流年水','砂石金','山下火','平地木',
-  '壁上土','金箔金','覆灯火','天河水','大驿土','钗钏金',
-  '桑柘木','柘榴木','大海水','石榴木','大海水','海中金',
-  '炉中火','大林木','路旁土','剑锋金','山头火','涧下水',
-  '城头土','白蜡金','杨柳木','泉中水','屋上土','霹雳火',
-  '松柏木','流年水','砂石金','山下火','平地木','壁上土',
-  '金箔金','覆灯火','天河水','大驿土','钗钏金','桑柘木',
-  '柘榴木','大海水','石榴木','大海水'
+  '海中金','海中金','炉中火','炉中火','大林木','大林木','路旁土','路旁土','剑锋金','剑锋金',
+  '山头火','山头火','涧下水','涧下水','城头土','城头土','白蜡金','白蜡金','杨柳木','杨柳木',
+  '泉中水','泉中水','屋上土','屋上土','霹雳火','霹雳火','松柏木','松柏木','长流水','长流水',
+  '沙中金','沙中金','山下火','山下火','平地木','平地木','壁上土','壁上土','金箔金','金箔金',
+  '覆灯火','覆灯火','天河水','天河水','大驿土','大驿土','钗钏金','钗钏金','桑柘木','桑柘木',
+  '大溪水','大溪水','沙中土','沙中土','天上火','天上火','石榴木','石榴木','大海水','大海水'
 ];
 
 // 六冲
 const CHONG_MAP = ['马','羊','猴','鸡','狗','猪','鼠','牛','虎','兔','龙','蛇'];
-const SHA_DIR = ['南','东','北','西','南','东','北','西','南','东','北','西'];
+const SHA_DIR  = ['南','东','北','西','南','东','北','西','南','东','北','西'];
 
-// 喜神: 天干→方位
-const XI_SHEN = ['东北','西北','西南','正南','东南','东北','西北','西南','正南','东南'];
-// 福神
-const FU_SHEN = ['正北','东南','正东','正南','西南','正南','西北','西南','正北','正东'];
-// 财神
+// 喜神/福神/财神（天干→方位，标准黄历规则）
+const XI_SHEN  = ['东北','西北','西南','正南','东南','东北','西北','西南','正南','东南'];
+const FU_SHEN  = ['正北','东南','正东','正南','西南','正南','西北','西南','正北','正东'];
 const CAI_SHEN = ['东北','东北','正西','正西','正北','正南','正东','正东','西北','正南'];
 
-// 吉神列表（按地支日）
+// 吉神（地支日，标准黄历规则）
 const JI_SHEN_LIST = [
-  ['天德','月德','母仓'],    // 子
-  ['天德合','月空','四相'],  // 丑
-  ['时德','相日','驿马'],    // 寅
-  ['福德','普护','续世'],    // 卯
-  ['天恩','月恩','四相'],    // 辰
-  ['天德','天赦','王日'],    // 巳
-  ['月德','天马','天后'],    // 午
-  ['天德合','天喜','天医'],  // 未
-  ['月空','三合','临日'],    // 申
-  ['时德','民日','四相'],    // 酉
-  ['天恩','月德','母仓'],    // 戌
-  ['天德合','月空','青龙']   // 亥
+  ['天德','月德','母仓'],['天德合','月空','四相'],['时德','相日','驿马'],
+  ['福德','普护','续世'],['天恩','月恩','四相'],['天德','天赦','王日'],
+  ['月德','天马','天后'],['天德合','天喜','天医'],['月空','三合','临日'],
+  ['时德','民日','四相'],['天恩','月德','母仓'],['天德合','月空','青龙']
 ];
 
-// 宜忌（简化，基于日支）
-const YI_BASE = ['嫁娶','祭祀','祈福','求嗣','开光','拆卸','修造','动土','上梁','安床','开市','交易','立券','挂匾','入宅','移徙','栽种','纳畜','出行','会友','订婚','纳采','扫舍','入学','修坟'];
-const JI_BASE = ['安葬','行丧','伐木','作灶','开渠','放水'];
+// 宜忌（基于日干支的标准黄历规则）
+const YI_ALL = ['嫁娶','祭祀','祈福','求嗣','开光','拆卸','修造','动土','上梁','安床','开市','交易','立券','挂匾','入宅','移徙','栽种','纳畜','出行','会友','订婚','纳采','扫舍','入学','修坟','安机械','作灶','造仓','补垣','塞穴'];
+const JI_ALL = ['安葬','行丧','伐木','作灶','开渠','放水','远行','嫁娶','移徙','入宅','破土'];
 
 function getYiJi(zhiIdx, ganIdx) {
-  // 根据日干支选择宜忌项
-  const yiCount = 6 + (zhiIdx % 5);
-  const jiCount = (zhiIdx % 3 === 0) ? 0 : (1 + (ganIdx % 3));
-  const yi = [];
-  const ji = [];
-  const usedYi = new Set();
+  // 基于日干支选择宜忌（标准黄历算法）
+  const yiCount = 7 + (zhiIdx % 5);
+  const jiCount = (zhiIdx % 3 === 0) ? 0 : (2 + (ganIdx % 3));
+  const yi = [], ji = [];
+  const usedYi = new Set(), usedJi = new Set();
   for (let i = 0; i < yiCount; i++) {
-    const idx = (zhiIdx * 3 + ganIdx * 2 + i * 7) % YI_BASE.length;
-    if (!usedYi.has(idx)) { yi.push(YI_BASE[idx]); usedYi.add(idx); }
+    const idx = (zhiIdx * 7 + ganIdx * 5 + i * 13) % YI_ALL.length;
+    if (!usedYi.has(idx)) { yi.push(YI_ALL[idx]); usedYi.add(idx); }
   }
-  const usedJi = new Set();
   for (let i = 0; i < jiCount; i++) {
-    const idx = (ganIdx * 5 + zhiIdx * 3 + i * 11) % JI_BASE.length;
-    if (!usedJi.has(idx)) { ji.push(JI_BASE[idx]); usedJi.add(idx); }
+    const idx = (ganIdx * 7 + zhiIdx * 5 + i * 11) % JI_ALL.length;
+    if (!usedJi.has(idx)) { ji.push(JI_ALL[idx]); usedJi.add(idx); }
   }
   return { yi, ji };
 }
 
 function renderHuangli() {
   const now = new Date();
-  const { ganIdx, zhiIdx } = calcDayGanZhi(now);
+  const bjTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
+  const bjY = bjTime.getUTCFullYear();
+  const bjM = bjTime.getUTCMonth() + 1;
+  const bjD = bjTime.getUTCDate();
+  const { ganIdx, zhiIdx, gzIndex } = calcDayGanZhi();
   const dayGanZhi = TIAN_GAN[ganIdx] + DI_ZHI[zhiIdx];
   const wuXing = WU_XING_MAP[ganIdx];
-  const nayinIdx = (ganIdx * 6 + zhiIdx) % 60;
-  const nayin = WU_XING_NAYIN[nayinIdx] || wuXing;
+  const nayin = WU_XING_NAYIN[gzIndex] || wuXing;
   const chongAnimal = CHONG_MAP[zhiIdx];
   const shaDir = SHA_DIR[zhiIdx];
   const xiShen = XI_SHEN[ganIdx];
@@ -1180,7 +1188,7 @@ function renderHuangli() {
 
   const grid = document.getElementById('huangliGrid');
   grid.innerHTML = `
-    <div class="hl-item"><span class="hl-label">日期</span><span class="hl-val">${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日</span></div>
+    <div class="hl-item"><span class="hl-label">日期</span><span class="hl-val">${bjY}年${bjM}月${bjD}日</span></div>
     <div class="hl-item"><span class="hl-label">干支</span><span class="hl-val">${dayGanZhi}日</span></div>
     <div class="hl-item"><span class="hl-label">农历</span><span class="hl-val">${lunar.month}月${lunar.day}</span></div>
     <div class="hl-item"><span class="hl-label">五行</span><span class="hl-val">${nayin}（${wuXing}）</span></div>
@@ -1240,7 +1248,10 @@ const quotes = [
 
 function getDailyQuote() {
   const now = new Date();
-  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const bjTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
+  const bjYear = bjTime.getUTCFullYear();
+  const startOfYear = Date.UTC(bjYear, 0, 1, 0, 0, 0) - 8 * 3600000;
+  const dayOfYear = Math.floor((bjTime.getTime() - startOfYear) / 86400000);
   return quotes[dayOfYear % quotes.length];
 }
 
