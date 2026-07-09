@@ -264,6 +264,72 @@ body::before {
   transform: scale(1.02);
 }
 
+/* ========== 免责声明横幅 ========== */
+.disclaimer-banner {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+  border: 1.5px solid #ffc107;
+  border-left: 5px solid #ff9800;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 2px 12px rgba(255,152,0,0.12);
+  animation: fadeInUp 0.4s ease both;
+  transition: all 0.3s ease;
+}
+.disclaimer-banner.dismissed {
+  opacity: 0;
+  max-height: 0;
+  padding: 0;
+  margin: 0;
+  border-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.disclaimer-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.disclaimer-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.disclaimer-body {
+  flex: 1;
+  min-width: 0;
+}
+.disclaimer-body strong {
+  display: block;
+  font-size: 14px;
+  color: #e65100;
+  margin-bottom: 2px;
+}
+.disclaimer-body span {
+  font-size: 12px;
+  color: #5d4037;
+  line-height: 1.6;
+}
+.disclaimer-close {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.08);
+  color: #795548;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: var(--font);
+}
+.disclaimer-close:hover {
+  background: #ef5350;
+  color: #fff;
+}
+
 /* ========== 分类导航 ========== */
 .nav-section { margin-bottom: clamp(20px, 3vw, 32px); }
 
@@ -759,6 +825,18 @@ body::before {
     <div class="search-box-wrap">
       <input type="text" id="searchInput" placeholder="输入关键词，搜你所想..." autofocus>
       <button class="search-btn" id="searchBtn">搜 索</button>
+    </div>
+  </div>
+
+  <!-- 免责声明横幅 -->
+  <div class="disclaimer-banner" id="disclaimerBanner">
+    <div class="disclaimer-content">
+      <span class="disclaimer-icon">⚠️</span>
+      <div class="disclaimer-body">
+        <strong>免责声明</strong>
+        <span>本站所有资源链接均来源于网络公开信息，仅供技术研究参考。请自行辨别链接真伪与安全性，谨防钓鱼和诈骗网站，本站不承担任何责任。</span>
+      </div>
+      <button class="disclaimer-close" onclick="dismissDisclaimer()" title="关闭">✕</button>
     </div>
   </div>
 
@@ -1305,6 +1383,22 @@ function makeLinks(links, fallbackEmoji) {
     </a>`;
   }).join('');
 }
+
+// ========== 免责声明关闭 ==========
+function dismissDisclaimer() {
+  const banner = document.getElementById('disclaimerBanner');
+  if (banner) banner.classList.add('dismissed');
+  // 24小时后再次显示
+  localStorage.setItem('disclaimer_dismissed', Date.now());
+}
+// 检查是否在24小时内已关闭
+(function(){
+  const dismissed = localStorage.getItem('disclaimer_dismissed');
+  if (dismissed && (Date.now() - dismissed) < 86400000) {
+    const banner = document.getElementById('disclaimerBanner');
+    if (banner) banner.classList.add('dismissed');
+  }
+})();
 
 // ========== 多显少折 ==========
 function initFoldButtons() {
