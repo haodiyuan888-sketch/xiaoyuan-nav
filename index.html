@@ -850,64 +850,64 @@ body::before {
     <div class="link-grid" id="crackLinks"></div>
   </div>
 
-  <!-- 购物平台 -->
+  <!-- 搜索引擎与信息门户 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">🛒</span>购物平台<span class="count">12个</span></div>
-    <div class="link-grid" id="shopLinks"></div>
+    <div class="section-title"><span class="icon">🔍</span>搜索引擎与信息门户<span class="count">10个</span></div>
+    <div class="link-grid" id="searchInfoLinks"></div>
   </div>
 
-  <!-- 外卖美食 -->
+  <!-- 学习与知识 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">🍔</span>外卖美食<span class="count">10个</span></div>
-    <div class="link-grid" id="foodLinks"></div>
+    <div class="section-title"><span class="icon">📖</span>学习与知识<span class="count">15个</span></div>
+    <div class="link-grid link-grid-fold" id="learnLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="learnLinks">展开 ▾</button>
+    </div>
   </div>
 
-  <!-- 社交平台 -->
+  <!-- 工作与职场 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">📱</span>社交平台<span class="count">12个</span></div>
-    <div class="link-grid" id="socialLinks"></div>
+    <div class="section-title"><span class="icon">💼</span>工作与职场<span class="count">15个</span></div>
+    <div class="link-grid link-grid-fold" id="workLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="workLinks">展开 ▾</button>
+    </div>
   </div>
 
-  <!-- 视频娱乐 -->
+  <!-- 生活与购物 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">🎬</span>视频娱乐<span class="count">12个</span></div>
-    <div class="link-grid" id="videoLinks"></div>
+    <div class="section-title"><span class="icon">🏠</span>生活与购物<span class="count">19个</span></div>
+    <div class="link-grid link-grid-fold" id="lifeShopLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="lifeShopLinks">展开 ▾</button>
+    </div>
   </div>
 
-  <!-- 音乐平台 -->
+  <!-- 社交与娱乐 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">🎵</span>音乐平台<span class="count">8个</span></div>
-    <div class="link-grid" id="musicLinks"></div>
+    <div class="section-title"><span class="icon">🎮</span>社交与娱乐<span class="count">20个</span></div>
+    <div class="link-grid link-grid-fold" id="socialFunLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="socialFunLinks">展开 ▾</button>
+    </div>
   </div>
 
-  <!-- 出行旅游 -->
+  <!-- 金融与支付 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">✈️</span>出行旅游<span class="count">12个</span></div>
-    <div class="link-grid" id="travelLinks"></div>
+    <div class="section-title"><span class="icon">💰</span>金融与支付<span class="count">10个</span></div>
+    <div class="link-grid link-grid-fold" id="payLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="payLinks">展开 ▾</button>
+    </div>
   </div>
 
-  <!-- 生活服务 -->
+  <!-- 工具与实用 -->
   <div class="nav-section">
-    <div class="section-title"><span class="icon">🏠</span>生活服务<span class="count">12个</span></div>
-    <div class="link-grid" id="lifeLinks"></div>
-  </div>
-
-  <!-- 金融理财 -->
-  <div class="nav-section">
-    <div class="section-title"><span class="icon">💰</span>金融理财<span class="count">12个</span></div>
-    <div class="link-grid" id="financeLinks"></div>
-  </div>
-
-  <!-- 新闻资讯 -->
-  <div class="nav-section">
-    <div class="section-title"><span class="icon">📰</span>新闻资讯<span class="count">10个</span></div>
-    <div class="link-grid" id="newsLinks"></div>
-  </div>
-
-  <!-- 学习教育 -->
-  <div class="nav-section">
-    <div class="section-title"><span class="icon">📚</span>学习教育<span class="count">12个</span></div>
-    <div class="link-grid" id="eduLinks"></div>
+    <div class="section-title"><span class="icon">🛠️</span>工具与实用<span class="count">10个</span></div>
+    <div class="link-grid link-grid-fold" id="utilLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="utilLinks">展开 ▾</button>
+    </div>
   </div>
 
   <!-- 常用导航 -->
@@ -941,24 +941,6 @@ body::before {
         </div>
       </div>
 
-      <!-- 存储 & 邮箱 -->
-      <div class="nav-section">
-        <div class="section-title"><span class="icon">☁️</span>存储 & 邮箱<span class="count">12个</span></div>
-        <div class="link-grid link-grid-fold" id="storageLinks"></div>
-        <div class="fold-toggle-wrap">
-          <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="storageLinks">展开 ▾</button>
-        </div>
-      </div>
-
-      <!-- 在线工具 -->
-      <div class="nav-section">
-        <div class="section-title"><span class="icon">🔧</span>在线工具<span class="count">18个</span></div>
-        <div class="link-grid link-grid-fold" id="toolLinks"></div>
-        <div class="fold-toggle-wrap">
-          <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="toolLinks">展开 ▾</button>
-        </div>
-      </div>
-
       <!-- 开发资源 -->
       <div class="nav-section">
         <div class="section-title"><span class="icon">💻</span>开发资源<span class="count">20个</span></div>
@@ -966,12 +948,6 @@ body::before {
         <div class="fold-toggle-wrap">
           <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="devLinks">展开 ▾</button>
         </div>
-      </div>
-
-      <!-- 游戏娱乐 -->
-      <div class="nav-section">
-        <div class="section-title"><span class="icon">🎮</span>游戏娱乐<span class="count">5个</span></div>
-        <div class="link-grid" id="gameLinks"></div>
       </div>
 
       <!-- 每日热榜 -->
@@ -1623,23 +1599,17 @@ async function forceRepair() {
   showToast('🔧 正在检测全站链接...', 60000);
 
   const sections = [
-    { id: 'shopLinks',   name: '🛒购物' },
-    { id: 'foodLinks',   name: '🍔外卖' },
-    { id: 'socialLinks', name: '📱社交' },
-    { id: 'videoLinks',  name: '🎬视频' },
-    { id: 'musicLinks',  name: '🎵音乐' },
-    { id: 'travelLinks', name: '✈️出行' },
-    { id: 'lifeLinks',   name: '🏠生活' },
-    { id: 'financeLinks',name: '💰金融' },
-    { id: 'newsLinks',   name: '📰新闻' },
-    { id: 'eduLinks',    name: '📚学习' },
-    { id: 'commonLinks', name: '⭐常用' },
-    { id: 'aiLinks',     name: '🤖AI' },
-    { id: 'designLinks', name: '🎨设计' },
-    { id: 'storageLinks',name: '☁️存储' },
-    { id: 'toolLinks',   name: '🔧工具' },
-    { id: 'devLinks',    name: '💻开发' },
-    { id: 'gameLinks',   name: '🎮游戏' }
+    { id: 'searchInfoLinks', name: '🔍搜索' },
+    { id: 'learnLinks',      name: '📖学习' },
+    { id: 'workLinks',       name: '💼职场' },
+    { id: 'lifeShopLinks',   name: '🏠生活' },
+    { id: 'socialFunLinks',  name: '🎮娱乐' },
+    { id: 'payLinks',        name: '💰金融' },
+    { id: 'utilLinks',       name: '🛠️工具' },
+    { id: 'commonLinks',     name: '⭐常用' },
+    { id: 'aiLinks',         name: '🤖AI' },
+    { id: 'designLinks',     name: '🎨设计' },
+    { id: 'devLinks',        name: '💻开发' }
   ];
 
   const results = [];
@@ -1688,23 +1658,134 @@ document.getElementById('crackLinks').innerHTML = makeLinks([
 ], '🎵');
 
 // 购物平台
-document.getElementById('shopLinks').innerHTML = makeLinks([
+// 搜索引擎与信息门户
+document.getElementById('searchInfoLinks').innerHTML = makeLinks([
+  {name:'百度',url:'https://www.baidu.com/'},
+  {name:'谷歌',url:'https://www.google.com/'},
+  {name:'必应',url:'https://www.bing.com/'},
+  {name:'中国搜索',url:'https://www.chinaso.com/'},
+  {name:'搜狐',url:'https://www.sohu.com/'},
+  {name:'新浪',url:'https://www.sina.com.cn/'},
+  {name:'网易',url:'https://www.163.com/'},
+  {name:'腾讯网',url:'https://www.qq.com/'},
+  {name:'新华网',url:'https://www.xinhuanet.com/'},
+  {name:'人民网',url:'https://www.people.com.cn/'}
+], '🔍');
+
+// 学习与知识
+document.getElementById('learnLinks').innerHTML = makeLinks([
+  {name:'中国大学MOOC',url:'https://www.icourse163.org/'},
+  {name:'学堂在线',url:'https://www.xuetangx.com/'},
+  {name:'知乎',url:'https://www.zhihu.com/'},
+  {name:'豆瓣',url:'https://www.douban.com/'},
+  {name:'维基百科',url:'https://www.wikipedia.org/'},
+  {name:'百度百科',url:'https://baike.baidu.com/'},
+  {name:'果壳',url:'https://www.guokr.com/'},
+  {name:'简书',url:'https://www.jianshu.com/'},
+  {name:'中国知网',url:'https://www.cnki.net/'},
+  {name:'网易公开课',url:'https://open.163.com/'},
+  {name:'小木虫',url:'https://muchong.com/'},
+  {name:'CSDN',url:'https://www.csdn.net/'},
+  {name:'GitHub',url:'https://github.com/'},
+  {name:'Stack Overflow',url:'https://stackoverflow.com/'},
+  {name:'B站学习区',url:'https://www.bilibili.com/'}
+], '📖');
+
+// 工作与职场
+document.getElementById('workLinks').innerHTML = makeLinks([
+  {name:'LinkedIn',url:'https://www.linkedin.com/'},
+  {name:'前程无忧',url:'https://www.51job.com/'},
+  {name:'智联招聘',url:'https://www.zhaopin.com/'},
+  {name:'猎聘',url:'https://www.liepin.com/'},
+  {name:'Boss直聘',url:'https://www.zhipin.com/'},
+  {name:'脉脉',url:'https://maimai.cn/'},
+  {name:'天眼查',url:'https://www.tianyancha.com/'},
+  {name:'企查查',url:'https://www.qcc.com/'},
+  {name:'钉钉',url:'https://www.dingtalk.com/'},
+  {name:'企业微信',url:'https://work.weixin.qq.com/'},
+  {name:'飞书',url:'https://www.feishu.cn/'},
+  {name:'网易邮箱',url:'https://mail.163.com/'},
+  {name:'QQ邮箱',url:'https://mail.qq.com/'},
+  {name:'139邮箱',url:'https://mail.10086.cn/'},
+  {name:'新浪邮箱',url:'https://mail.sina.com.cn/'}
+], '💼');
+
+// 生活与购物
+document.getElementById('lifeShopLinks').innerHTML = makeLinks([
   {name:'淘宝',url:'https://www.taobao.com/'},
+  {name:'天猫',url:'https://www.tmall.com/'},
   {name:'京东',url:'https://www.jd.com/'},
   {name:'拼多多',url:'https://www.pinduoduo.com/'},
-  {name:'天猫',url:'https://www.tmall.com/'},
-  {name:'唯品会',url:'https://www.vip.com/'},
-  {name:'苏宁易购',url:'https://www.suning.com/'},
-  {name:'闲鱼',url:'https://www.goofish.com/'},
-  {name:'1688',url:'https://www.1688.com/'},
-  {name:'得物',url:'https://www.dewu.com/'},
-  {name:'当当网',url:'https://www.dangdang.com/'},
-  {name:'网易严选',url:'https://you.163.com/'},
-  {name:'小米商城',url:'https://www.mi.com/'}
-], '🛒');
+  {name:'亚马逊',url:'https://www.amazon.cn/'},
+  {name:'美团',url:'https://www.meituan.com/'},
+  {name:'饿了么',url:'https://www.ele.me/'},
+  {name:'大众点评',url:'https://www.dianping.com/'},
+  {name:'携程',url:'https://www.ctrip.com/'},
+  {name:'12306',url:'https://www.12306.cn/'},
+  {name:'飞猪',url:'https://www.fliggy.com/'},
+  {name:'去哪儿',url:'https://www.qunar.com/'},
+  {name:'滴滴出行',url:'https://www.didiglobal.com/'},
+  {name:'高德地图',url:'https://www.amap.com/'},
+  {name:'百度地图',url:'https://map.baidu.com/'},
+  {name:'贝壳找房',url:'https://www.ke.com/'},
+  {name:'链家',url:'https://www.lianjia.com/'},
+  {name:'58同城',url:'https://www.58.com/'},
+  {name:'赶集网',url:'https://www.ganji.com/'}
+], '🏠');
 
-// 外卖美食
-document.getElementById('foodLinks').innerHTML = makeLinks([
+// 社交与娱乐
+document.getElementById('socialFunLinks').innerHTML = makeLinks([
+  {name:'微信',url:'https://weixin.qq.com/'},
+  {name:'QQ',url:'https://www.qq.com/'},
+  {name:'微博',url:'https://www.weibo.com/'},
+  {name:'抖音',url:'https://www.douyin.com/'},
+  {name:'快手',url:'https://www.kuaishou.com/'},
+  {name:'哔哩哔哩',url:'https://www.bilibili.com/'},
+  {name:'小红书',url:'https://www.xiaohongshu.com/'},
+  {name:'优酷',url:'https://www.youku.com/'},
+  {name:'爱奇艺',url:'https://www.iqiyi.com/'},
+  {name:'腾讯视频',url:'https://v.qq.com/'},
+  {name:'网易云音乐',url:'https://music.163.com/'},
+  {name:'QQ音乐',url:'https://y.qq.com/'},
+  {name:'酷狗音乐',url:'https://www.kugou.com/'},
+  {name:'喜马拉雅',url:'https://www.ximalaya.com/'},
+  {name:'虎牙直播',url:'https://www.huya.com/'},
+  {name:'斗鱼直播',url:'https://www.douyu.com/'},
+  {name:'Steam',url:'https://store.steampowered.com/'},
+  {name:'英雄联盟',url:'https://lol.qq.com/'},
+  {name:'王者荣耀',url:'https://pvp.qq.com/'},
+  {name:'原神',url:'https://ys.mihoyo.com/'}
+], '🎮');
+
+// 金融与支付
+document.getElementById('payLinks').innerHTML = makeLinks([
+  {name:'支付宝',url:'https://www.alipay.com/'},
+  {name:'微信支付',url:'https://pay.weixin.qq.com/'},
+  {name:'工商银行',url:'https://www.icbc.com.cn/'},
+  {name:'东方财富',url:'https://www.eastmoney.com/'},
+  {name:'同花顺',url:'https://www.10jqka.com.cn/'},
+  {name:'雪球',url:'https://xueqiu.com/'},
+  {name:'蚂蚁财富',url:'https://www.antfortune.com/'},
+  {name:'天天基金',url:'https://fund.eastmoney.com/'},
+  {name:'中国银联',url:'https://www.unionpay.com/'},
+  {name:'中国人民银行',url:'https://www.pbc.gov.cn/'}
+], '💰');
+
+// 工具与实用
+document.getElementById('utilLinks').innerHTML = makeLinks([
+  {name:'百度网盘',url:'https://pan.baidu.com/'},
+  {name:'阿里云盘',url:'https://www.aliyundrive.com/'},
+  {name:'115网盘',url:'https://www.115.com/'},
+  {name:'中国天气网',url:'https://www.weather.com.cn/'},
+  {name:'快递100',url:'https://www.kuaidi100.com/'},
+  {name:'菜鸟',url:'https://www.cainiao.com/'},
+  {name:'下厨房',url:'https://www.xiachufang.com/'},
+  {name:'谷歌翻译',url:'https://translate.google.cn/'},
+  {name:'百度翻译',url:'https://fanyi.baidu.com/'},
+  {name:'国家电网',url:'https://www.95598.cn/'}
+], '🛠️');
+
+// 常用导航
   {name:'美团外卖',url:'https://waimai.meituan.com/'},
   {name:'饿了么',url:'https://www.ele.me/'},
   {name:'美团',url:'https://www.meituan.com/'},
@@ -1717,129 +1798,6 @@ document.getElementById('foodLinks').innerHTML = makeLinks([
   {name:'盒马',url:'https://www.freshhema.com/'}
 ], '🍔');
 
-// 社交平台
-document.getElementById('socialLinks').innerHTML = makeLinks([
-  {name:'微信',url:'https://wx.qq.com/'},
-  {name:'QQ',url:'https://im.qq.com/'},
-  {name:'微博',url:'https://weibo.com/'},
-  {name:'小红书',url:'https://www.xiaohongshu.com/'},
-  {name:'豆瓣',url:'https://www.douban.com/'},
-  {name:'知乎',url:'https://www.zhihu.com/'},
-  {name:'百度贴吧',url:'https://tieba.baidu.com/'},
-  {name:'抖音',url:'https://www.douyin.com/'},
-  {name:'快手',url:'https://www.kuaishou.com/'},
-  {name:'B站',url:'https://www.bilibili.com/'},
-  {name:'虎扑',url:'https://www.hupu.com/'},
-  {name:'CSDN',url:'https://www.csdn.net/'}
-], '📱');
-
-// 视频娱乐
-document.getElementById('videoLinks').innerHTML = makeLinks([
-  {name:'腾讯视频',url:'https://v.qq.com/'},
-  {name:'爱奇艺',url:'https://www.iqiyi.com/'},
-  {name:'优酷',url:'https://www.youku.com/'},
-  {name:'哔哩哔哩',url:'https://www.bilibili.com/'},
-  {name:'芒果TV',url:'https://www.mgtv.com/'},
-  {name:'西瓜视频',url:'https://www.ixigua.com/'},
-  {name:'CCTV直播',url:'https://tv.cctv.com/live/'},
-  {name:'1905电影网',url:'https://www.1905.com/'},
-  {name:'搜狐视频',url:'https://tv.sohu.com/'},
-  {name:'咪咕视频',url:'https://www.miguvideo.com/'},
-  {name:'央视频',url:'https://yangshipin.cn/'},
-  {name:'抖音网页版',url:'https://www.douyin.com/'}
-], '🎬');
-
-// 音乐平台
-document.getElementById('musicLinks').innerHTML = makeLinks([
-  {name:'网易云音乐',url:'https://music.163.com/'},
-  {name:'QQ音乐',url:'https://y.qq.com/'},
-  {name:'酷狗音乐',url:'https://www.kugou.com/'},
-  {name:'酷我音乐',url:'https://www.kuwo.cn/'},
-  {name:'Spotify',url:'https://www.spotify.com/'},
-  {name:'Apple Music',url:'https://music.apple.com/'},
-  {name:'咪咕音乐',url:'https://music.migu.cn/'},
-  {name:'5sing',url:'https://5sing.kugou.com/'}
-], '🎵');
-
-// 出行旅游
-document.getElementById('travelLinks').innerHTML = makeLinks([
-  {name:'12306',url:'https://www.12306.cn/'},
-  {name:'携程',url:'https://www.ctrip.com/'},
-  {name:'去哪儿',url:'https://www.qunar.com/'},
-  {name:'飞猪',url:'https://www.fliggy.com/'},
-  {name:'高德地图',url:'https://www.amap.com/'},
-  {name:'百度地图',url:'https://map.baidu.com/'},
-  {name:'滴滴出行',url:'https://www.didiglobal.com/'},
-  {name:'哈啰',url:'https://www.hellobike.com/'},
-  {name:'同程旅行',url:'https://www.ly.com/'},
-  {name:'途牛',url:'https://www.tuniu.com/'},
-  {name:'马蜂窝',url:'https://www.mafengwo.cn/'},
-  {name:'航旅纵横',url:'https://www.umetrip.com/'}
-], '✈️');
-
-// 生活服务
-document.getElementById('lifeLinks').innerHTML = makeLinks([
-  {name:'58同城',url:'https://www.58.com/'},
-  {name:'贝壳找房',url:'https://www.ke.com/'},
-  {name:'链家',url:'https://www.lianjia.com/'},
-  {name:'天眼查',url:'https://www.tianyancha.com/'},
-  {name:'企查查',url:'https://www.qcc.com/'},
-  {name:'快递100',url:'https://www.kuaidi100.com/'},
-  {name:'菜鸟',url:'https://www.cainiao.com/'},
-  {name:'国家电网',url:'https://www.95598.cn/'},
-  {name:'中国移动',url:'https://www.10086.cn/'},
-  {name:'中国联通',url:'https://www.10010.com/'},
-  {name:'中国电信',url:'https://www.189.cn/'},
-  {name:'12123交管',url:'https://gab.122.gov.cn/'}
-], '🏠');
-
-// 金融理财
-document.getElementById('financeLinks').innerHTML = makeLinks([
-  {name:'支付宝',url:'https://www.alipay.com/'},
-  {name:'工商银行',url:'https://www.icbc.com.cn/'},
-  {name:'建设银行',url:'https://www.ccb.com/'},
-  {name:'招商银行',url:'https://www.cmbchina.com/'},
-  {name:'农业银行',url:'https://www.abchina.com/'},
-  {name:'中国银行',url:'https://www.boc.cn/'},
-  {name:'东方财富',url:'https://www.eastmoney.com/'},
-  {name:'同花顺',url:'https://www.10jqka.com.cn/'},
-  {name:'雪球',url:'https://xueqiu.com/'},
-  {name:'云闪付',url:'https://www.unionpay.com/'},
-  {name:'京东金融',url:'https://jr.jd.com/'},
-  {name:'微信支付',url:'https://pay.weixin.qq.com/'}
-], '💰');
-
-// 新闻资讯
-document.getElementById('newsLinks').innerHTML = makeLinks([
-  {name:'今日头条',url:'https://www.toutiao.com/'},
-  {name:'腾讯新闻',url:'https://news.qq.com/'},
-  {name:'网易新闻',url:'https://news.163.com/'},
-  {name:'搜狐新闻',url:'https://news.sohu.com/'},
-  {name:'澎湃新闻',url:'https://www.thepaper.cn/'},
-  {name:'36氪',url:'https://36kr.com/'},
-  {name:'虎嗅',url:'https://www.huxiu.com/'},
-  {name:'央视网',url:'https://www.cctv.com/'},
-  {name:'新华网',url:'https://www.xinhuanet.com/'},
-  {name:'人民日报',url:'https://www.people.com.cn/'}
-], '📰');
-
-// 学习教育
-document.getElementById('eduLinks').innerHTML = makeLinks([
-  {name:'中国知网',url:'https://www.cnki.net/'},
-  {name:'百度学术',url:'https://xueshu.baidu.com/'},
-  {name:'中国大学MOOC',url:'https://www.icourse163.org/'},
-  {name:'网易公开课',url:'https://open.163.com/'},
-  {name:'腾讯课堂',url:'https://ke.qq.com/'},
-  {name:'得到',url:'https://www.dedao.cn/'},
-  {name:'知乎盐选',url:'https://www.zhihu.com/xen/market'},
-  {name:'B站课堂',url:'https://www.bilibili.com/cheese/'},
-  {name:'万方数据',url:'https://www.wanfangdata.com.cn/'},
-  {name:'维普',url:'https://www.cqvip.com/'},
-  {name:'有道词典',url:'https://www.youdao.com/'},
-  {name:'百度翻译',url:'https://fanyi.baidu.com/'}
-], '📚');
-
-// 常用导航
 document.getElementById('commonLinks').innerHTML = makeLinks([
   {name:'腾讯视频',url:'https://v.qq.com/',color:'#1890ff'},
   {name:'优酷',url:'https://www.youku.com/',color:'#00b4f0'},
@@ -1907,76 +1865,24 @@ document.getElementById('designLinks').innerHTML = makeLinks([
   {name:'Magic Eraser',url:'https://magiceraser.io/',color:'#6c5ce7'}
 ], '🎨');
 
-// 存储 & 邮箱
-document.getElementById('storageLinks').innerHTML = makeLinks([
-  {name:'阿里云盘',url:'https://www.alipan.com/',color:'#ff6b6b'},
-  {name:'百度网盘',url:'https://pan.baidu.com/',color:'#3385ff'},
-  {name:'蓝奏云',url:'https://www.lanzou.com/',color:'#00b894'},
-  {name:'迅雷云盘',url:'https://pan.xunlei.com/',color:'#0984e3'},
-  {name:'OneDrive',url:'https://onedrive.live.com/',color:'#0078d4'},
-  {name:'天翼云盘',url:'https://cloud.189.cn/',color:'#ff9800'},
-  {name:'QQ邮箱',url:'https://mail.qq.com/',color:'#12b7f5'},
-  {name:'网易邮箱',url:'https://mail.163.com/',color:'#c0392b'},
-  {name:'新浪邮箱',url:'https://mail.sina.com.cn/',color:'#e74c3c'},
-  {name:'阿里邮箱',url:'https://mail.aliyun.com/',color:'#ff6a00'},
-  {name:'123云盘',url:'https://www.123pan.com/',color:'#07c160'},
-  {name:'Gmail',url:'https://mail.google.com/',color:'#ea4335'}
-], '☁️');
-
-// 在线工具
-document.getElementById('toolLinks').innerHTML = makeLinks([
-  {name:'在线工具大全',url:'https://tool.lu/',color:'#3498db'},
-  {name:'IP查询',url:'https://ip.sb/',color:'#2ecc71'},
-  {name:'谷歌翻译',url:'https://translate.google.com/',color:'#4285f4'},
-  {name:'有道翻译',url:'https://fanyi.youdao.com/',color:'#e8483b'},
-  {name:'微PE工具',url:'https://www.wepe.com.cn/',color:'#1abc9c'},
-  {name:'在线Ping',url:'https://ping.chinaz.com/',color:'#e67e22'},
-  {name:'ICP备案查询',url:'https://beian.miit.gov.cn/',color:'#e74c3c'},
-  {name:'爱站网',url:'https://www.aizhan.com/',color:'#3498db'},
-  {name:'PDF提取图片',url:'https://smallpdf.com/',color:'#e84393'},
-  {name:'在线文本比对',url:'https://www.jqk.pw/text-compare',color:'#9b59b6'},
-  {name:'在线计算器',url:'https://jisuanqi.com/',color:'#34495e'},
-  {name:'站长工具',url:'https://tool.chinaz.com/',color:'#27ae60'},
-  {name:'测速网',url:'https://www.speedtest.cn/',color:'#0984e3'},
-  {name:'在线JSON',url:'https://www.json.cn/',color:'#636e72'},
-  {name:'条形码生成',url:'https://barcode.tec-it.com/',color:'#2d3436'},
-  {name:'免费HLS播放器',url:'https://hlsplayer.net/',color:'#d63031'},
-  {name:'BIOS快捷键',url:'https://www.bootskey.com/',color:'#6c5ce7'},
-  {name:'图片格式转换',url:'https://convertio.co/',color:'#00b894'}
-], '🔧');
-
 // 开发资源
 document.getElementById('devLinks').innerHTML = makeLinks([
-  {name:'HTML在线运行',url:'https://codepen.io/',color:'#000'},
-  {name:'MD编辑器',url:'https://www.gaoding.com/markdown',color:'#1abc9c'},
-  {name:'代码格式化',url:'https://tool.lu/codeformat/',color:'#3498db'},
-  {name:'JS混淆器',url:'https://obfuscator.io/',color:'#f7df1e'},
-  {name:'W3school',url:'https://www.w3school.com.cn/',color:'#4caf50'},
   {name:'GitHub',url:'https://github.com/',color:'#24292e'},
   {name:'码云Gitee',url:'https://gitee.com/',color:'#c71d23'},
-  {name:'Linux命令查询',url:'https://www.linuxcool.com/',color:'#fcc624'},
   {name:'CSDN',url:'https://www.csdn.net/',color:'#fc5531'},
+  {name:'W3school',url:'https://www.w3school.com.cn/',color:'#4caf50'},
+  {name:'Vue.js',url:'https://cn.vuejs.org/',color:'#4fc08d'},
+  {name:'菜鸟教程',url:'https://www.runoob.com/',color:'#4caf50'},
+  {name:'Linux命令',url:'https://www.linuxcool.com/',color:'#fcc624'},
   {name:'CdnJs',url:'https://cdnjs.com/',color:'#e74c3c'},
-  {name:'字节跳动CDN',url:'https://cdn.bytedance.com/',color:'#3370ff'},
   {name:'Font Awesome',url:'https://fontawesome.com/',color:'#339af0'},
-  {name:'MSDN我告诉你',url:'https://msdn.itellyou.cn/',color:'#0078d4'},
+  {name:'MSDN',url:'https://msdn.itellyou.cn/',color:'#0078d4'},
   {name:'腾讯云',url:'https://cloud.tencent.com/',color:'#00a4ff'},
   {name:'阿里云',url:'https://www.aliyun.com/',color:'#ff6a00'},
-  {name:'Vue.js',url:'https://cn.vuejs.org/',color:'#4fc08d'},
+  {name:'微信文档',url:'https://developers.weixin.qq.com/',color:'#07c160'},
   {name:'PHP中文网',url:'https://www.php.cn/',color:'#8892bf'},
-  {name:'菜鸟教程',url:'https://www.runoob.com/',color:'#4caf50'},
-  {name:'微信开放文档',url:'https://developers.weixin.qq.com/',color:'#07c160'},
-  {name:'EdgeOne Pages',url:'https://pages.edgeone.ai/',color:'#0052d9'}
+  {name:'HTML在线',url:'https://codepen.io/',color:'#000'}
 ], '💻');
-
-// 游戏娱乐
-document.getElementById('gameLinks').innerHTML = makeLinks([
-  {name:'4399小游戏',url:'https://www.4399.com/',color:'#ff9800'},
-  {name:'7k7k小游戏',url:'https://www.7k7k.com/',color:'#4caf50'},
-  {name:'STEAM',url:'https://store.steampowered.com/',color:'#1b2838'},
-  {name:'3DM游戏网',url:'https://www.3dmgame.com/',color:'#e74c3c'},
-  {name:'Epic游戏商城',url:'https://www.epicgames.com/',color:'#2f2f2f'}
-], '🎮');
 
 // ========== 热点内容（静态数据 + 更新时间戳） ==========
 const hotData = {
