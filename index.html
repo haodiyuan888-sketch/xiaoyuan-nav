@@ -763,17 +763,21 @@ body::before {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(30,41,59,0.9);
+  background: rgba(30,41,59,0.92);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: #fff;
-  padding: 10px 22px;
-  border-radius: 24px;
+  padding: 12px 22px;
+  border-radius: 16px;
   font-size: 13px;
   z-index: 9999;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s;
+  max-width: 92vw;
+  white-space: pre-line;
+  text-align: center;
+  line-height: 1.6;
 }
 
 .toast.show { opacity: 1; }
@@ -1567,14 +1571,74 @@ function updateRepairUI() {
 }
 
 // 一键修复
+// 修复指定栏目的所有链接
+async function repairSection(gridId, name) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return null;
+  const cards = grid.querySelectorAll('.link-card[data-url]');
+  let ok = 0, repaired = 0, down = 0;
+  const batchSize = 4;
+  for (let i = 0; i < cards.length; i += batchSize) {
+    const batch = Array.from(cards).slice(i, i + batchSize);
+    const results = await Promise.allSettled(batch.map(checkAndRepairCard));
+    results.forEach(r => {
+      if (r.status === 'fulfilled') {
+        if (r.value.status === 'ok') ok++;
+        else if (r.value.status === 'repaired') repaired++;
+        else if (r.value.status === 'down') down++;
+      }
+    });
+  }
+  return { name, total: cards.length, ok, repaired, down };
+}
+
 async function forceRepair() {
-  showToast('🔧 正在全面检测修复中...');
-  document.querySelectorAll('.link-card.site-down').forEach(c => c.classList.remove('site-down'));
-  await checkAllSites();
-  const msg = repairStats.down === 0
-    ? `✅ 全部${repairStats.total}个站点正常！`
-    : `✅${repairStats.ok} | 🔧修复${repairStats.repaired} | ❌${repairStats.down}个离线`;
-  showToast(msg);
+  const btn = document.querySelector('.hero-repair-btn');
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+
+  showToast('🔧 正在修复追剧/动漫/漫画/小说...', 60000);
+
+  const sections = [
+    { id: 'tvLinks',    name: '📺 追剧栏目' },
+    { id: 'animeLinks', name: '🎬 动漫剧场' },
+    { id: 'mangaLinks', name: '📖 漫画' },
+    { id: 'novelLinks', name: '📚 小说' }
+  ];
+
+  const results = [];
+  for (const s of sections) {
+    const r = await repairSection(s.id, s.name);
+    if (r) results.push(r);
+  }
+
+  // 汇总
+  const totalOk = results.reduce((s,r) => s + r.ok, 0);
+  const totalFixed = results.reduce((s,r) => s + r.repaired, 0);
+  const totalDown = results.reduce((s,r) => s + r.down, 0);
+  const totalAll = results.reduce((s,r) => s + r.total, 0);
+
+  // 明细
+  const lines = results.map(r =>
+    `${r.name}: ✅${r.ok} 🔧${r.repaired} ❌${r.down}`
+  );
+
+  let msg;
+  if (totalFixed > 0) {
+    msg = `✅ 修复完成！共 ${totalAll} 个站点，修复 ${totalFixed} 个失效链接\n${lines.join(' | ')}`;
+  } else if (totalDown === 0) {
+    msg = `✅ 全部 ${totalAll} 个站点正常！`;
+  } else {
+    msg = `⚠️ ${totalDown} 个站点离线，其余正常`;
+  }
+
+  showToast(msg, 8000);
+
+  // 更新底部状态
+  repairStats = { ok: totalOk, repaired: totalFixed, down: totalDown, total: totalAll };
+  lastCheckTime = new Date();
+  updateRepairUI();
+
+  if (btn) { btn.disabled = false; btn.style.opacity = ''; }
 }
 
 // 页载3秒首检，之后每15分钟重检
