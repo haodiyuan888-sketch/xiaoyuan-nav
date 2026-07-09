@@ -1287,18 +1287,23 @@ function showToast(msg, duration) {
 }
 
 // ========== 导航数据 ==========
-// 从URL提取域名
+// 提取域名
 function getDomain(url) {
   try { return new URL(url).hostname; } catch(e) { return ''; }
 }
 
-// 获取favicon地址
+// 三重favicon源：Google → 直接favicon.ico → DuckDuckGo
 function faviconUrl(url) {
   const domain = getDomain(url);
-  return domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64` : '';
+  if (!domain) return '';
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+}
+function faviconBackup(url) {
+  const domain = getDomain(url);
+  if (!domain) return '';
+  return `https://${domain}/favicon.ico`;
 }
 
-// 首字图标颜色库 — 每个卡片独有的精美配色
 const avatarColors = [
   '#6366f1','#ec4899','#f97316','#10b981','#06b6d4','#8b5cf6',
   '#ef4444','#14b8a6','#f59e0b','#3b82f6','#a855f7','#e11d48',
@@ -1308,23 +1313,21 @@ const avatarColors = [
   '#3730a3','#9f1239','#115e59','#6b21a8','#991b1b','#075985'
 ];
 
-// favicon优先 → 首字兜底（每站点独一无二）
+// 真实favicon优先，加载失败→备用→首字兜底
 function makeLinks(links, fallbackEmoji) {
-  const emoji = fallbackEmoji || '🔗';
   return links.map((l, i) => {
-    const src = faviconUrl(l.url);
+    const primary = faviconUrl(l.url);
+    const backup = faviconBackup(l.url);
     const color = avatarColors[i % avatarColors.length];
     const initial = l.name.charAt(0);
-    // 首字图标默认显示，favicon加载成功后替换
-    return `<a href="${l.url}" target="_blank" class="link-card" title="${l.name}" rel="noopener" data-url="${l.url}">
+    return `<a href="${l.url}" target="_blank" class="link-card" title="${l.name}" rel="noopener">
       <span class="link-icon" style="background:${color}">
         <span class="link-icon-initial">${initial}</span>
-        <img class="link-icon-img" src="${src}" alt="" loading="lazy"
+        <img class="link-icon-img" src="${primary}" alt=""
           onload="this.style.display='block';var s=this.parentElement.querySelector('.link-icon-initial');if(s)s.style.display='none'"
-          onerror="this.remove()">
+          onerror="this.src='${backup}';this.onerror=function(){this.remove()}">
       </span>
       <span class="link-name">${l.name}</span>
-      <span class="link-status" title="站点可能无法访问">⚠</span>
     </a>`;
   }).join('');
 }
