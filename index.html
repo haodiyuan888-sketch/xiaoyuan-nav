@@ -1319,13 +1319,15 @@ function makeLinks(links, fallbackEmoji) {
     const primary = faviconUrl(l.url);
     const backup = faviconBackup(l.url);
     const color = avatarColors[i % avatarColors.length];
-    const initial = l.name.charAt(0);
+    const hasCustomIcon = !!l.icon;
+    const initial = l.icon || l.name.charAt(0);
+    const faviconHTML = hasCustomIcon ? '' : `<img class="link-icon-img" src="${primary}" alt=""
+      onload="this.style.display='block';var s=this.parentElement.querySelector('.link-icon-initial');if(s)s.style.display='none'"
+      onerror="this.src='${backup}';this.onerror=function(){this.remove()}">`;
     return `<a href="${l.url}" target="_blank" class="link-card" title="${l.name}" rel="noopener">
       <span class="link-icon" style="background:${color}">
         <span class="link-icon-initial">${initial}</span>
-        <img class="link-icon-img" src="${primary}" alt=""
-          onload="this.style.display='block';var s=this.parentElement.querySelector('.link-icon-initial');if(s)s.style.display='none'"
-          onerror="this.src='${backup}';this.onerror=function(){this.remove()}">
+        ${faviconHTML}
       </span>
       <span class="link-name">${l.name}</span>
     </a>`;
@@ -1369,7 +1371,7 @@ setTimeout(initFoldButtons, 100);
 
 // 破解栏目
 document.getElementById('crackLinks').innerHTML = makeLinks([
-  {name:'小源音乐',url:'https://xiaoyuan-player.onrender.com/'}
+  {name:'小源音乐',url:'https://xiaoyuan-player.onrender.com/',icon:'🎵'}
 ], '🎵');
 
 // 购物平台
