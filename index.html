@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+<link rel="dns-prefetch" href="https://www.google.com">
+<link rel="preconnect" href="https://www.google.com" crossorigin>
 <script>
 // 防止移动端初始横向溢出
 document.documentElement.style.overflowX = 'hidden';
@@ -433,6 +435,8 @@ body::before {
   background: #fff;
   position: absolute;
   inset: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .link-card .link-status {
@@ -1296,7 +1300,7 @@ function getDomain(url) {
 function faviconUrl(url) {
   const domain = getDomain(url);
   if (!domain) return '';
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
 }
 function faviconBackup(url) {
   const domain = getDomain(url);
@@ -1321,7 +1325,7 @@ function makeLinks(links, fallbackEmoji) {
     const color = avatarColors[i % avatarColors.length];
     const hasCustomIcon = !!l.icon;
     const initial = l.icon || l.name.charAt(0);
-    const faviconHTML = hasCustomIcon ? '' : `<img class="link-icon-img" src="${primary}" alt=""
+    const faviconHTML = hasCustomIcon ? '' : `<img class="link-icon-img" src="${primary}" alt="" decoding="async"
       onload="this.style.display='block';var s=this.parentElement.querySelector('.link-icon-initial');if(s)s.style.display='none'"
       onerror="this.src='${backup}';this.onerror=function(){this.remove()}">`;
     return `<a href="${l.url}" target="_blank" class="link-card" title="${l.name}" rel="noopener">
