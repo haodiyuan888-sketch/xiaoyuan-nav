@@ -94,6 +94,14 @@ body::before {
   padding: clamp(20px, 4vw, 36px) 0 6px;
 }
 
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .hero .logo {
   font-size: clamp(28px, 6vw, 46px);
   font-weight: 900;
@@ -102,14 +110,49 @@ body::before {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 2px;
-  margin-bottom: 4px;
   filter: drop-shadow(0 2px 4px rgba(99,102,241,0.3));
 }
+
+.hero-repair-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--accent);
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.hero-repair-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+}
+
+.hero-repair-btn:active { transform: scale(0.95); }
 
 .hero .slogan {
   font-size: clamp(12px, 2vw, 14px);
   color: var(--text-secondary);
   letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+@media (max-width: 480px) {
+  .hero-repair-btn { padding: 5px 10px; font-size: 12px; }
+  .hero-repair-text { display: none; }
+  .hero-top { gap: 8px; }
 }
 
 /* ========== 搜索区域 ========== */
@@ -678,7 +721,12 @@ body::before {
 
   <!-- 头部 -->
   <div class="hero">
-    <div class="logo">小源导航</div>
+    <div class="hero-top">
+      <div class="logo">小源导航</div>
+      <button class="hero-repair-btn" onclick="forceRepair()" title="一键检测+修复失效链接">
+        🔧<span class="hero-repair-text"> 一键修复</span>
+      </button>
+    </div>
     <div class="slogan">上网，从小源导航页开始！</div>
   </div>
 
@@ -837,19 +885,6 @@ body::before {
       </div>
 
       <!-- 小源专属 -->
-      <div class="side-card" style="text-align:center;">
-        <h4>🛡️ 站点维护</h4>
-        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;">自动检测 + 自动替换失效链接</p>
-        <button onclick="forceRepair()" style="
-          padding:10px 28px;border-radius:24px;border:none;
-          background:var(--accent-gradient);color:#fff;font-size:14px;
-          font-weight:600;cursor:pointer;transition:all 0.25s;
-          font-family:var(--font);letter-spacing:1px;
-        " onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-          🔧 一键修复
-        </button>
-      </div>
-
       <div class="side-card">
         <h4>✨ 关于小源</h4>
         <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
