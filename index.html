@@ -136,6 +136,7 @@ body::before {
   font-family: var(--font);
   white-space: nowrap;
   flex-shrink: 0;
+  position: relative;
 }
 
 .hero-repair-btn:hover {
@@ -145,7 +146,15 @@ body::before {
   box-shadow: 0 4px 14px rgba(99,102,241,0.3);
 }
 
+.hero-repair-btn:hover .hero-repair-hint { color: rgba(255,255,255,0.8); }
+
 .hero-repair-btn:active { transform: scale(0.95); }
+
+.hero-repair-hint {
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.65;
+}
 
 .hero .slogan {
   font-size: clamp(12px, 2vw, 14px);
@@ -155,8 +164,8 @@ body::before {
 }
 
 @media (max-width: 480px) {
-  .hero-repair-btn { padding: 5px 10px; font-size: 12px; }
-  .hero-repair-text { display: none; }
+  .hero-repair-btn { padding: 5px 11px; font-size: 12px; }
+  .hero-repair-hint { display: none; }
   .hero-top { gap: 8px; }
 }
 
@@ -728,8 +737,9 @@ body::before {
   <div class="hero">
     <div class="hero-top">
       <div class="logo">小源导航</div>
-      <button class="hero-repair-btn" onclick="forceRepair()" title="一键检测+修复失效链接">
+      <button class="hero-repair-btn" onclick="forceRepair()">
         🔧<span class="hero-repair-text"> 一键修复</span>
+        <span class="hero-repair-hint">检测并替换失效链接</span>
       </button>
     </div>
     <div class="slogan">上网，从小源导航页开始！</div>
