@@ -964,21 +964,16 @@ body::before {
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== 时钟更新 ==========
+// ========== 时钟更新（北京时间 Asia/Shanghai）==========
 function updateClock() {
-  // 北京时间 UTC+8
-  const now = new Date();
-  const bjTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
+  const bj = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false });
+  const m = bj.match(/(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+)/);
+  if (!m) return;
   const weekNames = ['日','一','二','三','四','五','六'];
-  const y = bjTime.getUTCFullYear();
-  const m = bjTime.getUTCMonth() + 1;
-  const d = bjTime.getUTCDate();
-  const w = weekNames[bjTime.getUTCDay()];
-  const hh = String(bjTime.getUTCHours()).padStart(2,'0');
-  const mm = String(bjTime.getUTCMinutes()).padStart(2,'0');
-  const ss = String(bjTime.getUTCSeconds()).padStart(2,'0');
-  document.getElementById('dateStr').textContent = `${y}年${m}月${d}日 星期${w}`;
-  document.getElementById('timeStr').textContent = `${hh}:${mm}:${ss}`;
+  const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
+  const w = weekNames[d.getDay()];
+  document.getElementById('dateStr').textContent = `${m[1]}年${m[2]}月${m[3]}日 星期${w}`;
+  document.getElementById('timeStr').textContent = `${m[4]}:${m[5]}:${m[6]}`;
 }
 updateClock();
 setInterval(updateClock, 1000);
@@ -1034,15 +1029,15 @@ function getLunar() {
   const lunarMonthNames = ['正','二','三','四','五','六','七','八','九','十','冬','腊'];
   const lunarDayNames = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
 
-  // 使用北京时间（UTC+8）
-  const now = new Date();
-  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000;
-  const bjNow = new Date(utcMs);
-  const y = bjNow.getUTCFullYear();
+  // 使用北京时间计算日期
+  const bjParts = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).match(/(\d+)\/(\d+)\/(\d+)/);
+  if (!bjParts) return { month: '正', day: '初一', yearGanZhi: '丙午', shengxiao: '马' };
+  const y = parseInt(bjParts[1]), m = parseInt(bjParts[2]), d = parseInt(bjParts[3]);
 
-  // 公历当天距1900-01-31的天数（农历1900年正月初一，北京时间）
-  const base = Date.UTC(1900, 0, 31, 0, 0, 0) - 8 * 3600000;
-  let days = Math.floor((bjNow.getTime() - base) / 86400000);
+  // 公历当天距1900-01-31的天数（农历1900年正月初一）
+  const base = Date.UTC(1900, 0, 31);
+  const today = Date.UTC(y, m-1, d);
+  let days = Math.floor((today - base) / 86400000);
 
   // 逐年减去农历年天数，定位农历年份
   let lunarY = 1900;
@@ -1168,10 +1163,10 @@ function getYiJi(zhiIdx, ganIdx) {
 
 function renderHuangli() {
   const now = new Date();
-  const bjTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
-  const bjY = bjTime.getUTCFullYear();
-  const bjM = bjTime.getUTCMonth() + 1;
-  const bjD = bjTime.getUTCDate();
+  const bjParts = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).match(/(\d+)\/(\d+)\/(\d+)/);
+  const bjY = bjParts ? parseInt(bjParts[1]) : now.getFullYear();
+  const bjM = bjParts ? parseInt(bjParts[2]) : now.getMonth()+1;
+  const bjD = bjParts ? parseInt(bjParts[3]) : now.getDate();
   const { ganIdx, zhiIdx, gzIndex } = calcDayGanZhi();
   const dayGanZhi = TIAN_GAN[ganIdx] + DI_ZHI[zhiIdx];
   const wuXing = WU_XING_MAP[ganIdx];
@@ -1248,10 +1243,12 @@ const quotes = [
 
 function getDailyQuote() {
   const now = new Date();
-  const bjTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000);
-  const bjYear = bjTime.getUTCFullYear();
-  const startOfYear = Date.UTC(bjYear, 0, 1, 0, 0, 0) - 8 * 3600000;
-  const dayOfYear = Math.floor((bjTime.getTime() - startOfYear) / 86400000);
+  const bjParts = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).match(/(\d+)\/(\d+)\/(\d+)/);
+  if (!bjParts) return quotes[0];
+  const bjYear = parseInt(bjParts[1]), bjMonth = parseInt(bjParts[2]), bjDay = parseInt(bjParts[3]);
+  const startOfYear = Date.UTC(bjYear, 0, 1);
+  const today = Date.UTC(bjYear, bjMonth - 1, bjDay);
+  const dayOfYear = Math.floor((today - startOfYear) / 86400000);
   return quotes[dayOfYear % quotes.length];
 }
 
