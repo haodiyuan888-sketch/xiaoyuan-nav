@@ -2,7 +2,7 @@
  * HTML 源码加密构建脚本
  * 域名锁定 + 反调试 + 防保存
  *
- * 构建方式: 使用字符串拼接代替模板字面量+注释，避免压缩时 // 注释吞掉代码
+ * 使用纯 JS 同步哈希替代 crypto.subtle，确保 document.write 在页面加载期间执行
  */
 const fs = require('fs');
 const path = require('path');
@@ -27,6 +27,31 @@ const bm = html.match(/<body>([\s\S]*?)<\/body>/);
 if (!bm) { console.error('no <body>'); process.exit(1); }
 const bodyContent = bm[1];
 
+// ========== 纯 JS 同步哈希函数（编码端和浏览器端实现一致） ==========
+function syncHash(str) {
+  var s = new TextEncoder().encode(str);
+  var h = new Uint8Array(32);
+  // 初始化：填充输入数据
+  for (var i = 0; i < s.length && i < 32; i++) h[i] = s[i];
+  // 多轮 XOR-移位 混淆
+  for (var round = 0; round < 12; round++) {
+    for (var i = 0; i < 32; i++) {
+      var idx = (i * 7 + round * 13) % s.length;
+      var ror = ((round + 1) * 3) & 7;
+      h[i] = ((h[i] << (8 - ror)) | (h[i] >> ror)) & 255;
+      h[i] ^= s[idx] ^ ((round * 47 + i * 31) & 255);
+    }
+    // 每轮结束后做一次混合
+    if (round % 3 === 0) {
+      for (var i = 0; i < 31; i++) {
+        h[i] ^= h[i + 1];
+        h[i + 1] = ((h[i + 1] << 3) | (h[i + 1] >> 5)) & 255;
+      }
+    }
+  }
+  return Buffer.from(h);
+}
+
 const baseKey = crypto.randomBytes(32);
 
 function xorEncrypt(text, key) {
@@ -37,13 +62,15 @@ function xorEncrypt(text, key) {
 }
 const cipher = xorEncrypt(bodyContent, baseKey);
 
+// 为每个授权域名加密 baseKey
 const keyEntries = ALLOWED.map(d => {
-  const dh = crypto.createHash('sha256').update(d).digest();
+  const dh = syncHash(d);
   const encKey = Buffer.alloc(32);
   for (let i = 0; i < 32; i++) encKey[i] = baseKey[i] ^ dh[i];
   return encKey.toString('base64');
 });
 
+// 混淆存储域名列表
 const allowedXor = crypto.randomBytes(8);
 const allowedEnc = ALLOWED.map(d => {
   const db = Buffer.from(d, 'utf8');
@@ -70,7 +97,30 @@ const allowedEncJson = allowedEnc.map(e => {
   return JSON.stringify([parts[0], parseInt(parts[1])]);
 }).join(',');
 
-// 使用字符串拼接构建解码器，完全避免 // 注释问题
+// ========== 构建解码器（纯同步，无 async/await） ==========
+// 同步哈希函数 JS 实现（与编码端完全一致）
+const SHASH_FN =
+  'function _sh(d){' +
+  'var s=new TextEncoder().encode(d);' +
+  'var h=new Uint8Array(32);' +
+  'for(var i=0;i<s.length&&i<32;i++)h[i]=s[i];' +
+  'for(var r=0;r<12;r++){' +
+    'for(var i=0;i<32;i++){' +
+      'var idx=(i*7+r*13)%s.length;' +
+      'var ro=((r+1)*3)&7;' +
+      'h[i]=((h[i]<<(8-ro))|(h[i]>>ro))&255;' +
+      'h[i]^=s[idx]^((r*47+i*31)&255);' +
+    '}' +
+    'if(r%3===0){' +
+      'for(var i=0;i<31;i++){' +
+        'h[i]^=h[i+1];' +
+        'h[i+1]=((h[i+1]<<3)|(h[i+1]>>5))&255;' +
+      '}' +
+    '}' +
+  '}' +
+  'return h;' +
+  '}';
+
 var d = '';
 d += '(function(){';
 d += 'var _c=' + JSON.stringify(cipher) + ';';
@@ -80,30 +130,29 @@ d += 'var _al=[' + allowedEncJson + '];';
 d += 'var _ak=' + JSON.stringify(allowedXorB64) + ';';
 d += 'function _b2a(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0)})}';
 d += 'function _a2b(a){return String.fromCharCode.apply(null,a)}';
-d += 'function _sh(d){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(d))}';
+d += SHASH_FN;
 d += 'function _xor(a,b){var r=new Uint8Array(32);for(var i=0;i<32;i++)r[i]=a[i]^b[i%a.length];return r}';
 d += 'function _x(t,k){var a=atob(t),b=new Uint8Array(a.length);for(var i=0;i<a.length;i++)b[i]=a.charCodeAt(i)^k[i%k.length];return new TextDecoder("utf-8").decode(b)}';
 d += 'function _csum(s){var h1=0,h2=0;for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);h1=((h1<<5)-h1+c)|0;h2=((h2<<7)-h2+c)|0}return(h1^h2)>>>0}';
 d += 'function _cd(h){var ak=_b2a(_ak);for(var i=0;i<_al.length;i++){var d=_al[i][0],l=_al[i][1];var db=_b2a(d);for(var j=0;j<l;j++)db[j]^=ak[j%ak.length];var dd=_a2b(db.slice(0,l));if(h===dd||h.endsWith("."+dd))return i}return -1}';
 
-// 立即键盘拦截
+// 键盘拦截
 d += '(function(){';
 d += 'function _kb(e){';
 d += 'if(e.key==="F12"||(e.ctrlKey&&(e.key==="s"||e.key==="S"||e.key==="u"||e.key==="U"))||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="i"||e.key==="C"||e.key==="c"||e.key==="J"||e.key==="j"))||(e.metaKey&&e.altKey&&(e.key==="I"||e.key==="i"||e.key==="J"||e.key==="j"))){';
 d += 'e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();return false;';
-d += '}';
-d += '}';
+d += '}}';
 d += 'document.addEventListener("keydown",_kb,true);';
 d += 'document.addEventListener("keyup",_kb,true);';
 d += 'document.addEventListener("keypress",_kb,true);';
 d += 'document.addEventListener("contextmenu",function(e){e.preventDefault();return false},true);';
 d += '})();';
 
-// 异步解密 IIFE
-d += '(async function(){';
+// ====== 同步解密主流程（无 async/await） ======
+d += '(function(){';
 d += 'var h=window.location.hostname||"";';
 d += 'var di=_cd(h);';
-d += 'var dh=await _sh(h);dh=new Uint8Array(dh);';
+d += 'var dh=_sh(h);';
 d += 'var html="";';
 d += 'var bk=null;';
 d += 'if(di>=0){var ek=_b2a(_ks[di]);bk=_xor(ek,dh)}';
@@ -115,7 +164,7 @@ d += 'return}';
 d += 'document.write(html);';
 d += '})();';
 
-// DevTools 检测（延迟执行）
+// DevTools 检测（延迟执行，不阻塞页面加载）
 d += 'setTimeout(function(){';
 d += 'var _p=0,_o=null;';
 d += 'function _dt(){var s=performance.now();debugger;var e=performance.now();return(e-s>100)||(window.outerWidth-window.innerWidth>160)||(window.outerHeight-window.innerHeight>160)}';
@@ -128,7 +177,7 @@ d += 'setInterval(function(){["log","info","debug","warn","error","clear"].forEa
 d += 'document.addEventListener("keydown",function(e){if(e.key==="F12"||(e.ctrlKey&&(e.key==="s"||e.key==="S"||e.key==="u"||e.key==="U"))||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="i"||e.key==="J"||e.key==="j"))){e.preventDefault();e.stopPropagation();return false;}},true);';
 d += '},1500);';
 
-// beforeunload 清空 body（防浏览器菜单保存）
+// beforeunload 清空 body
 d += 'window.addEventListener("beforeunload",function(){try{if(document.body&&document.body.children.length>0)document.body.innerHTML=""}catch(e){}});';
 
 d += '})();';
