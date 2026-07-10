@@ -116,6 +116,46 @@ if(!bk||_csum(html)!==_cs){
 document.write('<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{margin:0;background:#0d1117;color:#c9d1d9;display:flex;align-items:center;justify-content:center;height:100vh;font-family:-apple-system,sans-serif}</style></head><body><div style=\"text-align:center;padding:40px\"><div style=\"font-size:64px\">&#128274;</div><h1 style=\"font-size:22px;margin:20px 0 8px\">'+'\\u8bbf\\u95ee\\u53d7\\u9650'+'</h1><p style=\"color:#8b949e;font-size:14px\">'+'\\u6b64\\u9875\\u9762\\u4ec5\\u9650\\u6388\\u6743\\u57df\\u540d\\u8bbf\\u95ee'+'<br>'+'\\u590d\\u5236\\u5230\\u5176\\u4ed6\\u57df\\u540d\\u65e0\\u6cd5\\u4f7f\\u7528'+'</p></div></body></html>');
 return}
 document.write(html);
+// ========== 反调试保护 ==========
+setTimeout(function(){
+var _p=0,_o=null,_t=0;
+function _dt(){
+  var s=performance.now();debugger;var e=performance.now();
+  return(e-s>100)||(window.outerWidth-window.innerWidth>160)||(window.outerHeight-window.innerHeight>160);
+}
+function _so(){
+  if(_o)return;
+  _o=document.createElement('div');
+  _o.id='_px_protect';
+  _o.style.cssText='position:fixed;z-index:2147483647;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;font-family:-apple-system,sans-serif';
+  _o.innerHTML='<div style=\"text-align:center;color:#c9d1d9;padding:40px\"><div style=\"font-size:72px;margin-bottom:24px\">&#128737;</div><h2 style=\"font-size:22px;margin:0 0 12px;color:#f85149\">'+'\\u5b89\\u5168\\u8b66\\u544a'+'</h2><p style=\"font-size:14px;color:#8b949e;line-height:1.8\">'+'\\u68c0\\u6d4b\\u5230\\u5f00\\u53d1\\u8005\\u5de5\\u5177\\u5df2\\u6253\\u5f00'+'<br>'+'\\u8bf7\\u5173\\u95ed\\u5f00\\u53d1\\u8005\\u5de5\\u5177\\u540e\\u5237\\u65b0\\u9875\\u9762'+'</p></div>';
+  document.body&&document.body.appendChild(_o);
+}
+function _ho(){
+  if(_o){_o.remove();_o=null}
+}
+function _dbg(){
+  if(!_dt()){_ho();_p=0;return}
+  _p++;_so();if(_p<3)return;
+  debugger;debugger;debugger;
+}
+function _kb(e){
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&(e.key==='I'||e.key==='C'||e.key==='J'))||(e.ctrlKey&&e.key==='U')||(e.ctrlKey&&e.key==='S')){
+    e.preventDefault();e.stopPropagation();return false;
+  }
+}
+document.addEventListener('keydown',_kb,true);
+document.addEventListener('contextmenu',function(e){e.preventDefault();return false});
+setInterval(_dbg,800);
+var _cOrig={};
+['log','info','debug','warn','error','clear'].forEach(function(k){
+  _cOrig[k]=console[k];console[k]=function(){};
+});
+// 每10秒恢复console并重新覆盖，防止被恢复
+setInterval(function(){
+  ['log','info','debug','warn','error','clear'].forEach(function(k){console[k]=function(){};});
+},10000);
+},1000);
 })();
 })();`;
 
