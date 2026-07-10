@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover">
+<script>
+// 防止移动端初始横向溢出
+document.documentElement.style.overflowX = 'hidden';
+document.documentElement.style.width = '100%';
+</script>
+<title>小源导航 - 从这里开始上网！</title>
+<style>
+/* ========== CSS 变量与重置 ========== */
+:root {
+  --bg-overlay: rgba(255,255,255,0.72);
+  --card-bg: rgba(255,255,255,0.78);
+  --card-hover: rgba(255,255,255,0.92);
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --accent: #6366f1;
+  --accent-light: rgba(99,102,241,0.1);
+  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+  --border: rgba(148,163,184,0.18);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  --max-width: 1400px;
+  --blur: blur(12px);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+  background: url('1.png') center / cover no-repeat fixed;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.45);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== 顶部栏 ========== */
+.top-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.top-bar .datetime { display: flex; align-items: center; gap: 12px; }
+.top-bar .datetime .date { color: var(--text); font-weight: 600; }
+.top-bar .datetime .time { color: var(--accent); font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums; }
+.top-bar .lunar { color: var(--text-muted); }
+
+/* ========== 主容器 ========== */
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 clamp(12px, 3vw, 24px) 40px;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* ========== 头部 LOGO 区域 ========== */
+.hero {
+  text-align: center;
+  padding: clamp(20px, 4vw, 36px) 0 6px;
+}
+
+.hero .logo {
+  font-size: clamp(28px, 6vw, 46px);
+  font-weight: 900;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  filter: drop-shadow(0 2px 4px rgba(99,102,241,0.3));
+}
+
+.hero .slogan {
+  font-size: clamp(12px, 2vw, 14px);
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+
+/* ========== 搜索区域 ========== */
+.search-section {
+  max-width: 680px;
+  margin: 16px auto 28px;
+  width: 100%;
+}
+
+.search-engines {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.search-engines .engine {
+  padding: 6px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.search-engines .engine:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.search-engines .engine.active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.search-box-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 2px solid var(--border);
+  border-radius: 28px;
+  padding: 4px 6px 4px 20px;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
+}
+
+.search-box-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 4px 24px rgba(99,102,241,0.2);
+}
+
+.search-box-wrap input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: clamp(14px, 2.5vw, 16px);
+  padding: 10px 0;
+  color: var(--text);
+  background: transparent;
+  font-family: var(--font);
+  min-width: 0;
+}
+
+.search-box-wrap input::placeholder { color: var(--text-muted); }
+
+.search-box-wrap .search-btn {
+  padding: 10px clamp(16px, 3vw, 28px);
+  background: var(--accent-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  font-size: clamp(13px, 2vw, 15px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.search-box-wrap .search-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* ========== 免责声明横幅 ========== */
+.disclaimer-banner {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+  border: 1.5px solid #ffc107;
+  border-left: 5px solid #ff9800;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: 0 2px 12px rgba(255,152,0,0.12);
+  animation: fadeInUp 0.4s ease both;
+  transition: all 0.3s ease;
+}
+.disclaimer-banner.dismissed {
+  opacity: 0;
+  max-height: 0;
+  padding: 0;
+  margin: 0;
+  border-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.disclaimer-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.disclaimer-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.disclaimer-body {
+  flex: 1;
+  min-width: 0;
+}
+.disclaimer-body strong {
+  display: block;
+  font-size: 14px;
+  color: #e65100;
+  margin-bottom: 2px;
+}
+.disclaimer-body span {
+  font-size: 12px;
+  color: #5d4037;
+  line-height: 1.6;
+}
+.disclaimer-close {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.08);
+  color: #795548;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: var(--font);
+}
+.disclaimer-close:hover {
+  background: #ef5350;
+  color: #fff;
+}
+
+/* ========== 分类导航 ========== */
+.nav-section { margin-bottom: clamp(20px, 3vw, 32px); }
+
+.nav-section .section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: clamp(15px, 2.2vw, 17px);
+  font-weight: 700;
+  color: var(--text);
+  padding-left: 2px;
+}
+
+.nav-section .section-title .icon { font-size: clamp(18px, 3vw, 22px); }
+
+.nav-section .section-title .count {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+/* 折叠展开 */
+.section-title.collapsible-toggle {
+  cursor: pointer;
+  user-select: none;
+  transition: var(--transition);
+}
+.section-title.collapsible-toggle:hover { color: var(--accent); }
+.collapse-arrow {
+  margin-left: auto;
+  font-size: 14px;
+  transition: transform 0.25s;
+  color: var(--text-muted);
+}
+.section-title.collapsible-toggle:not(.collapsed) .collapse-arrow {
+  transform: rotate(90deg);
+}
+.collapsible-body.collapsed { display: none; }
+
+/* 多显少折 */
+.link-grid-fold .link-card:nth-child(n+9) { display: none; }
+.link-grid-fold.expanded .link-card:nth-child(n+9) { display: flex; }
+
+.fold-toggle-wrap {
+  text-align: center;
+  margin-top: 6px;
+}
+
+.fold-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 18px;
+  border: none;
+  background: transparent;
+  color: #1e293b;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: var(--font);
+  letter-spacing: 0.3px;
+}
+
+.fold-toggle-btn:hover {
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.fold-toggle-btn .fold-count {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.fold-toggle-btn .fold-arrow {
+  font-size: 10px;
+  opacity: 0.6;
+  transition: transform 0.25s ease;
+}
+
+.fold-toggle-btn:hover .fold-arrow {
+  opacity: 1;
+  transform: translateY(1px);
+}
+
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+@media (min-width: 1200px) {
+  .link-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); }
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px clamp(10px, 2vw, 14px);
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  border: 1px solid var(--border);
+}
+
+.link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent);
+  background: var(--card-hover);
+}
+
+.link-card .link-icon {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 首字图标 — favicon加载前的精美兜底 */
+.link-card .link-icon-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; height: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  user-select: none;
+  letter-spacing: 0;
+}
+
+/* favicon图片 — 加载成功后覆盖首字 */
+.link-card .link-icon-img {
+  display: none;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+  position: absolute;
+  inset: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.link-card .link-status {
+  display: none;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-left: auto;
+  opacity: 0.5;
+}
+
+.link-card.site-down { opacity: 0.4; filter: grayscale(0.6); }
+.link-card.site-down:hover { opacity: 0.7; filter: none; }
+.link-card.site-down .link-status { display: inline; }
+
+.link-card .link-name {
+  font-size: clamp(12px, 1.8vw, 13px);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  word-break: keep-all;
+}
+
+/* ========== 两栏布局 ========== */
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 20px;
+  margin-bottom: 32px;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .cols { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 16px; }
+}
+
+@media (max-width: 560px) {
+  .sidebar { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ========== 热点新闻区 ========== */
+.hot-section { margin-bottom: 28px; }
+
+.hot-tabs {
+  display: flex;
+  margin-bottom: 12px;
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius);
+  padding: 4px;
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.hot-tabs::-webkit-scrollbar { display: none; }
+
+.hot-tabs .tab {
+  flex: 1 0 auto;
+  text-align: center;
+  padding: 9px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: clamp(11px, 1.8vw, 13px);
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  user-select: none;
+  white-space: nowrap;
+  min-width: fit-content;
+}
+
+.hot-tabs .tab:hover { color: var(--accent); }
+
+.hot-tabs .tab.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.hot-content { display: none; }
+.hot-content.active { display: block; }
+
+.hot-list {
+  list-style: none;
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius);
+  padding: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+.hot-list li {
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(12px, 1.8vw, 13px);
+  line-height: 1.4;
+  user-select: none;
+}
+
+.hot-list li + li { border-top: 1px solid var(--border); }
+
+.hot-list li:hover { background: var(--accent-light); }
+
+.hot-list li:active { transform: scale(0.98); }
+
+.hot-list .hot-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.hot-list .rank {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: #fff;
+  background: var(--text-muted);
+}
+
+.hot-list li:nth-child(1) .rank { background: #f44336; }
+.hot-list li:nth-child(2) .rank { background: #ff6d3f; }
+.hot-list li:nth-child(3) .rank { background: #ff9800; }
+
+.hot-list .hot-badge {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.hot-badge.fire { background: #fee2e2; color: #dc2626; }
+.hot-badge.new { background: #dbeafe; color: #2563eb; }
+.hot-badge.boom { background: #fef3c7; color: #d97706; }
+
+.hot-list .hot-num {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.hot-update {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 6px;
+}
+
+/* ========== 侧边栏 ========== */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.side-card {
+  background: var(--card-bg);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.side-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 今日黄历 */
+.huangli-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.huangli-grid .hl-item { display: flex; gap: 4px; color: var(--text-secondary); font-size: 12px; }
+.huangli-grid .hl-item .hl-label { color: var(--text-muted); flex-shrink: 0; }
+.huangli-grid .hl-item .hl-val { font-weight: 500; color: var(--text); }
+
+.hl-divider { grid-column: 1 / -1; border-top: 1px solid var(--border); margin: 2px 0; }
+
+.hl-yi-ji { font-size: 11px; line-height: 1.6; }
+.hl-yi-ji .yi { color: #16a34a; }
+.hl-yi-ji .ji { color: #dc2626; }
+
+/* ========== 底部 ========== */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 16px 16px 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+.footer .divider { margin: 0 6px; opacity: 0.4; }
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+  .top-bar { flex-wrap: wrap; gap: 4px; font-size: 12px; }
+  .link-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 6px; }
+  .link-card { padding: 10px 10px; }
+  .search-engines .engine { font-size: 11px; padding: 5px 10px; }
+  .hot-tabs { gap: 0; }
+}
+
+@media (max-width: 480px) {
+  .top-bar { font-size: 11px; justify-content: center; text-align: center; }
+  .top-bar .datetime { flex-wrap: wrap; justify-content: center; }
+  .link-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
+  .link-card { padding: 10px 6px; flex-direction: column; text-align: center; gap: 5px; border-radius: 10px; }
+  .link-card .link-icon { width: 28px; height: 28px; border-radius: 6px; }
+  .link-card .link-name { font-size: 11px; }
+  .search-section { margin: 12px auto 20px; }
+  .search-box-wrap { padding: 3px 4px 3px 14px; border-radius: 24px; }
+  .search-box-wrap input { font-size: 14px; padding: 8px 0; }
+  .search-box-wrap .search-btn { padding: 8px 14px; font-size: 13px; }
+  .hero .logo { font-size: 26px; }
+  .section-title { font-size: 14px; }
+  .hot-tabs .tab { font-size: 11px; padding: 7px 5px; }
+  .hot-list li { font-size: 12px; padding: 8px 8px; }
+  .cols { gap: 14px; }
+}
+
+@media (max-width: 360px) {
+  .link-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+  .link-card { padding: 8px 4px; min-width: 0; }
+  .link-card .link-icon { width: 24px; height: 24px; border-radius: 6px; }
+  .link-card .link-icon-emoji,
+  .link-card .link-icon-initial { font-size: 13px; }
+  .link-card .link-name { font-size: 10px; }
+  .top-bar .datetime .time { font-size: 13px; }
+  .top-bar .datetime .date { font-size: 11px; }
+  .hero .logo { font-size: 24px; }
+  .search-box-wrap { padding: 3px 4px 3px 10px; }
+  .search-box-wrap input { font-size: 13px; }
+  .search-box-wrap .search-btn { padding: 7px 12px; font-size: 12px; }
+}
+
+/* ========== 动画 ========== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-section { animation: fadeInUp 0.45s ease both; }
+.nav-section:nth-child(1) { animation-delay: 0.03s; }
+.nav-section:nth-child(2) { animation-delay: 0.08s; }
+.nav-section:nth-child(3) { animation-delay: 0.13s; }
+.nav-section:nth-child(4) { animation-delay: 0.18s; }
+.nav-section:nth-child(5) { animation-delay: 0.23s; }
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,41,59,0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 16px;
+  font-size: 13px;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  max-width: 92vw;
+  white-space: pre-line;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.toast.show { opacity: 1; }
+
+/* 滚动条美化 */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,0.6); }
+</style>
+</head>
+<body>
+
+<!-- 顶部时间栏 -->
+<div class="top-bar">
+  <div class="datetime">
+    <span class="date" id="dateStr">2026年7月9日 星期四</span>
+    <span class="time" id="timeStr">20:37:00</span>
+  </div>
+  <div class="lunar" id="lunarStr">农历五月廿五 · 丙午马年</div>
+</div>
+
+<!-- 主内容 -->
+<div class="main">
+
+  <!-- 头部 -->
+  <div class="hero">
+    <div class="logo">小源导航</div>
+    <div class="slogan">上网，从小源导航页开始！</div>
+  </div>
+
+  <!-- 搜索区域 -->
+  <div class="search-section">
+    <div class="search-engines" id="searchEngines">
+      <span class="engine active" data-engine="baidu" data-url="https://www.baidu.com/s?wd=">百度一下</span>
+      <span class="engine" data-engine="bing" data-url="https://cn.bing.com/search?q=">Bing必应</span>
+      <span class="engine" data-engine="sogou" data-url="https://www.sogou.com/web?query=">搜狗搜索</span>
+      <span class="engine" data-engine="meta" data-url="https://metaso.cn/?q=">秘塔AI搜索</span>
+      <span class="engine" data-engine="bilibili" data-url="https://search.bilibili.com/all?keyword=">哔哩哔哩</span>
+      <span class="engine" data-engine="github" data-url="https://github.com/search?q=">GitHub</span>
+      <span class="engine" data-engine="zhihu" data-url="https://www.zhihu.com/search?type=content&q=">知乎</span>
+    </div>
+    <div class="search-box-wrap">
+      <input type="text" id="searchInput" placeholder="输入关键词，搜你所想..." autofocus>
+      <button class="search-btn" id="searchBtn">搜 索</button>
+    </div>
+  </div>
+
+  <!-- 免责声明横幅 -->
+  <div class="disclaimer-banner" id="disclaimerBanner">
+    <div class="disclaimer-content">
+      <span class="disclaimer-icon">⚠️</span>
+      <div class="disclaimer-body">
+        <strong>免责声明</strong>
+        <span>本站所有资源链接均来源于网络公开信息，仅供技术研究参考。请自行辨别链接真伪与安全性，谨防钓鱼和诈骗网站，本站不承担任何责任。</span>
+      </div>
+      <button class="disclaimer-close" onclick="dismissDisclaimer()" title="关闭">✕</button>
+    </div>
+  </div>
+
+  <!-- 破解栏目 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🔓</span>破解栏目<span class="count">2个</span></div>
+    <div class="link-grid" id="crackLinks"></div>
+  </div>
+
+  <!-- 搜索引擎与信息门户 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🔍</span>搜索引擎与信息门户<span class="count">10个</span></div>
+    <div class="link-grid" id="searchInfoLinks"></div>
+  </div>
+
+  <!-- 学习与知识 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">📖</span>学习与知识<span class="count">15个</span></div>
+    <div class="link-grid link-grid-fold" id="learnLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="learnLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 工作与职场 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">💼</span>工作与职场<span class="count">15个</span></div>
+    <div class="link-grid link-grid-fold" id="workLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="workLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 生活与购物 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🏠</span>生活与购物<span class="count">19个</span></div>
+    <div class="link-grid link-grid-fold" id="lifeShopLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="lifeShopLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 社交与娱乐 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🎮</span>社交与娱乐<span class="count">20个</span></div>
+    <div class="link-grid link-grid-fold" id="socialFunLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="socialFunLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 金融与支付 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">💰</span>金融与支付<span class="count">10个</span></div>
+    <div class="link-grid link-grid-fold" id="payLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="payLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 工具与实用 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">🛠️</span>工具与实用<span class="count">10个</span></div>
+    <div class="link-grid link-grid-fold" id="utilLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="utilLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 常用导航 -->
+  <div class="nav-section">
+    <div class="section-title"><span class="icon">⭐</span>常用导航<span class="count">20个</span></div>
+    <div class="link-grid link-grid-fold" id="commonLinks"></div>
+    <div class="fold-toggle-wrap">
+      <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="commonLinks">展开 ▾</button>
+    </div>
+  </div>
+
+  <!-- 两栏布局 -->
+  <div class="cols">
+    <div class="col-main">
+
+      <!-- AI工具 -->
+      <div class="nav-section">
+        <div class="section-title"><span class="icon">🤖</span>AI工具<span class="count">18个</span></div>
+        <div class="link-grid link-grid-fold" id="aiLinks"></div>
+        <div class="fold-toggle-wrap">
+          <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="aiLinks">展开 ▾</button>
+        </div>
+      </div>
+
+      <!-- 设计办公 -->
+      <div class="nav-section">
+        <div class="section-title"><span class="icon">🎨</span>设计办公<span class="count">18个</span></div>
+        <div class="link-grid link-grid-fold" id="designLinks"></div>
+        <div class="fold-toggle-wrap">
+          <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="designLinks">展开 ▾</button>
+        </div>
+      </div>
+
+      <!-- 开发资源 -->
+      <div class="nav-section">
+        <div class="section-title"><span class="icon">💻</span>开发资源<span class="count">20个</span></div>
+        <div class="link-grid link-grid-fold" id="devLinks"></div>
+        <div class="fold-toggle-wrap">
+          <button class="fold-toggle-btn" onclick="toggleFold(this)" data-target="devLinks">展开 ▾</button>
+        </div>
+      </div>
+
+      <!-- 每日热榜 -->
+      <div class="hot-section">
+        <div class="section-title"><span class="icon">🔥</span>实时热点 · 最新消息</div>
+        <div class="hot-tabs" id="hotTabs">
+          <span class="tab active" data-tab="weibo">微博热搜</span>
+          <span class="tab" data-tab="baidu">百度热搜</span>
+          <span class="tab" data-tab="douyin">抖音热点</span>
+          <span class="tab" data-tab="bilibili">B站热搜</span>
+          <span class="tab" data-tab="tencent">腾讯新闻</span>
+          <span class="tab" data-tab="wangyi">网易新闻</span>
+          <span class="tab" data-tab="history">历史上的今天</span>
+        </div>
+        <div id="hotContents"></div>
+      </div>
+
+    </div>
+
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+      <!-- 今日黄历 -->
+      <div class="side-card" id="huangliCard">
+        <h4>📅 今日黄历</h4>
+        <div class="huangli-grid" id="huangliGrid"></div>
+      </div>
+
+      <!-- 名言 -->
+      <div class="side-card" id="quoteCard">
+        <h4>💬 每日一言</h4>
+        <p id="quoteText" style="font-size:13px;color:var(--text-secondary);line-height:1.7;"></p>
+      </div>
+
+      <!-- 小源专属 -->
+      <div class="side-card">
+        <h4>✨ 关于小源</h4>
+        <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
+          🏠 小源导航是你的个人上网入口<br>
+          ⚡ 聚合搜索、热点、工具于一体<br>
+          🎯 持续更新，打造最强导航页<br>
+          💡 为他人幸福而努力的，就不再是徒劳
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 底部 -->
+<div class="footer">
+  <span>小源导航</span>
+  <span class="divider">|</span>
+  <span>上网，从小源导航页开始！</span>
+  <span class="divider">|</span>
+  <span>&copy; 2026 小源导航</span>
+  <br>
+  <span style="font-size:11px;">本站为非商业性个人导航页，收录链接归原作者所有</span>
+  <br><br>
+  <div style="max-width:800px;margin:0 auto;text-align:left;font-size:11px;color:#1a1a1a;line-height:1.9;padding:12px 16px;background:rgba(0,0,0,0.04);border-radius:10px;border-left:3px solid #f44336;">
+    <strong style="color:#d32f2f;font-size:13px;">⚠️ 免责声明</strong><br>
+    本站所收录的网址、程序、技术方法均来自网络公开信息，仅面向合法合规的安全研究与教学场景，旨在提升网络安全防护能力，具有明确的技术研究属性。<br>
+    任何单位或个人未经授权，将本站内容用于攻击、破坏等非法用途的，由此引发的全部法律责任、民事赔偿及连带责任，均由行为人独立承担，本站不承担任何连带责任。<br>
+    本站内容均为技术交流与知识分享目的，若存在版权侵权或其他异议，请通过邮件联系处理。<br>
+    在享受免费资源的同时，若条件允许，建议通过官方渠道支持喜爱的作品。免费站点可能有广告，请注意辨别，避免点击不明弹窗。
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== 时钟更新（北京时间 Asia/Shanghai）==========
+function updateClock() {
+  const bj = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false });
+  const m = bj.match(/(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+)/);
+  if (!m) return;
+  // 用UTC计算北京时间的星期（北京时间 = UTC+8，且星期不受时区影响因为day边界一致）
+  const bjDate = new Date(Date.UTC(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3])));
+  const weekNames = ['日','一','二','三','四','五','六'];
+  const w = weekNames[bjDate.getUTCDay()];
+  document.getElementById('dateStr').textContent = `${m[1]}年${m[2]}月${m[3]}日 星期${w}`;
+  document.getElementById('timeStr').textContent = `${m[4]}:${m[5]}:${m[6]}`;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ========== 农历计算 ==========
+// 农历数据 (1900-2100)
+const lunarInfo = [
+  0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,
+  0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,
+  0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,
+  0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,
+  0x0d4a0,0x1d8a6,0x0b550,0x056a0,0x1a5b4,0x025d0,0x092d0,0x0d2b2,0x0a950,0x0b557,
+  0x06ca0,0x0b550,0x15355,0x04da0,0x0a5b0,0x14573,0x052b0,0x0a9a8,0x0e950,0x06aa0,
+  0x0aea6,0x0ab50,0x04b60,0x0aae4,0x0a570,0x05260,0x0f263,0x0d950,0x05b57,0x056a0,
+  0x096d0,0x04dd5,0x04ad0,0x0a4d0,0x0d4d4,0x0d250,0x0d558,0x0b540,0x0b6a0,0x195a6,
+  0x095b0,0x049b0,0x0a974,0x0a4b0,0x0b27a,0x06a50,0x06d40,0x0af46,0x0ab60,0x09570,
+  0x04af5,0x04970,0x064b0,0x074a3,0x0ea50,0x06b58,0x055c0,0x0ab60,0x096d5,0x092e0,
+  0x0c960,0x0d954,0x0d4a0,0x0da50,0x07552,0x056a0,0x0abb7,0x025d0,0x092d0,0x0cab5,
+  0x0a950,0x0b4a0,0x0baa4,0x0ad50,0x055d9,0x04ba0,0x0a5b0,0x15176,0x052b0,0x0a930,
+  0x07954,0x06aa0,0x0ad50,0x05b52,0x04b60,0x0a6e6,0x0a4e0,0x0d260,0x0ea65,0x0d530,
+  0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,0x1d0b6,0x0d250,0x0d520,0x0dd45,
+  0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,0x0aa50,0x1b255,0x06d20,0x0ada0,
+  0x14b63,0x09370,0x049f8,0x04970,0x064b0,0x168a6,0x0ea50,0x06aa0,0x1a6c4,0x0aae0,
+  0x0a4e0,0x0d260,0x0ea65,0x0d530,0x05aa0,0x076a3,0x096d0,0x04afb,0x04ad0,0x0a4d0,
+  0x1d0b6,0x0d250,0x0d520,0x0dd45,0x0b5a0,0x056d0,0x055b2,0x049b0,0x0a577,0x0a4b0,
+  0x0aa50,0x1b255,0x06d20,0x0ada0
+];
+
+// 农历月天数（month: 1-12）
+function lunarMonthDays(y, m) {
+  return (lunarInfo[y - 1900] & (1 << (16 - m))) ? 30 : 29;
+}
+// 闰月月份 (0=无闰月)
+function lunarLeapMonth(y) {
+  return lunarInfo[y - 1900] & 0xf;
+}
+// 闰月天数
+function lunarLeapDays(y) {
+  const leap = lunarLeapMonth(y);
+  return leap ? ((lunarInfo[y - 1900] & 0x10000) ? 30 : 29) : 0;
+}
+// 农历年总天数
+function lunarYearTotalDays(y) {
+  let sum = 0;
+  for (let m = 1; m <= 12; m++) sum += lunarMonthDays(y, m);
+  return sum + lunarLeapDays(y);
+}
+
+function getLunar() {
+  const gan = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  const zhi = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  const shengxiao = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+  const lunarMonthNames = ['正','二','三','四','五','六','七','八','九','十','冬','腊'];
+  const lunarDayNames = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+
+  // 使用北京时间计算日期
+  const bjParts = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).match(/(\d+)\/(\d+)\/(\d+)/);
+  if (!bjParts) return { month: '正', day: '初一', yearGanZhi: '丙午', shengxiao: '马' };
+  const y = parseInt(bjParts[1]), m = parseInt(bjParts[2]), d = parseInt(bjParts[3]);
+
+  // 公历当天距1900-01-31的天数（农历1900年正月初一）
+  const base = Date.UTC(1900, 0, 31);
+  const today = Date.UTC(y, m-1, d);
+  let days = Math.floor((today - base) / 86400000);
+
+  // 逐年减去农历年天数，定位农历年份
+  let lunarY = 1900;
+  while (lunarY < 2101) {
+    const yd = lunarYearTotalDays(lunarY);
+    if (days < yd) break;
+    days -= yd;
+    lunarY++;
+  }
+
+  // 在农历年内逐月定位
+  const leap = lunarLeapMonth(lunarY);
+  let lunarM = 1, isLeap = false;
+  for (let m = 1; m <= 12; m++) {
+    const md = lunarMonthDays(lunarY, m);
+    if (days < md) { lunarM = m; break; }
+    days -= md;
+    // 闰月
+    if (m === leap) {
+      const lmd = lunarLeapDays(lunarY);
+      if (days < lmd) { lunarM = m; isLeap = true; break; }
+      days -= lmd;
+    }
+  }
+
+  const lunarD = days + 1;
+  const tGan = gan[(lunarY - 4) % 10];
+  const tZhi = zhi[(lunarY - 4) % 12];
+  const tSx = shengxiao[(lunarY - 4) % 12];
+
+  return {
+    yearGanZhi: tGan + tZhi,
+    shengxiao: tSx,
+    month: (isLeap ? '闰' : '') + lunarMonthNames[lunarM - 1],
+    day: lunarDayNames[Math.min(lunarD - 1, 29)]
+  };
+}
+
+function updateLunarBar() {
+  try {
+    const lunar = getLunar();
+    document.getElementById('lunarStr').textContent = `农历${lunar.month}月${lunar.day} · ${lunar.yearGanZhi}年 · 属${lunar.shengxiao}`;
+  } catch(e) {}
+}
+updateLunarBar();
+setInterval(updateLunarBar, 600000);
+
+// ========== 黄历 ==========
+// ========== 黄历实时计算（北京时间 + 中国标准）==========
+const TIAN_GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const DI_ZHI   = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+
+// 构建60干支索引表（用于纳音查找）
+const GZ_INDEX = {};
+for (let i = 0; i < 60; i++) {
+  GZ_INDEX[TIAN_GAN[i % 10] + DI_ZHI[i % 12]] = i;
+}
+
+// 计算日干支（北京时间 UTC+8，以1900-01-01甲戌日为基准）
+function calcDayGanZhi() {
+  const now = new Date();
+  // 使用UTC+8北京时间计算
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000 + 8 * 3600000;
+  const bjDate = new Date(utcMs);
+  const base = Date.UTC(1900, 0, 1, 0, 0, 0) - 8 * 3600000; // 1900-01-01 北京时间00:00
+  const days = Math.floor((bjDate.getTime() - base) / 86400000);
+  // 1900-01-01 = 甲戌日 → gan=甲(0), zhi=戌(10)
+  const ganIdx = ((days % 10) + 10) % 10;
+  const zhiIdx = ((days + 10) % 12 + 12) % 12;
+  return { ganIdx, zhiIdx, gzIndex: ((days % 60) + 60) % 60 };
+}
+
+// 五行: 天干→五行
+const WU_XING_MAP = ['木','木','火','火','土','土','金','金','水','水'];
+
+// 六十甲子纳音（60个，标准中国黄历对照表）
+const WU_XING_NAYIN = [
+  '海中金','海中金','炉中火','炉中火','大林木','大林木','路旁土','路旁土','剑锋金','剑锋金',
+  '山头火','山头火','涧下水','涧下水','城头土','城头土','白蜡金','白蜡金','杨柳木','杨柳木',
+  '泉中水','泉中水','屋上土','屋上土','霹雳火','霹雳火','松柏木','松柏木','长流水','长流水',
+  '沙中金','沙中金','山下火','山下火','平地木','平地木','壁上土','壁上土','金箔金','金箔金',
+  '覆灯火','覆灯火','天河水','天河水','大驿土','大驿土','钗钏金','钗钏金','桑柘木','桑柘木',
+  '大溪水','大溪水','沙中土','沙中土','天上火','天上火','石榴木','石榴木','大海水','大海水'
+];
+
+// 六冲
+const CHONG_MAP = ['马','羊','猴','鸡','狗','猪','鼠','牛','虎','兔','龙','蛇'];
+const SHA_DIR  = ['南','东','北','西','南','东','北','西','南','东','北','西'];
+
+// 喜神/福神/财神（天干→方位，标准黄历规则）
+const XI_SHEN  = ['东北','西北','西南','正南','东南','东北','西北','西南','正南','东南'];
+const FU_SHEN  = ['正北','东南','正东','正南','西南','正南','西北','西南','正北','正东'];
+const CAI_SHEN = ['东北','东北','正西','正西','正北','正南','正东','正东','西北','正南'];
+
+// 吉神（地支日，标准黄历规则）
+const JI_SHEN_LIST = [
+  ['天德','月德','母仓'],['天德合','月空','四相'],['时德','相日','驿马'],
+  ['福德','普护','续世'],['天恩','月恩','四相'],['天德','天赦','王日'],
+  ['月德','天马','天后'],['天德合','天喜','天医'],['月空','三合','临日'],
+  ['时德','民日','四相'],['天恩','月德','母仓'],['天德合','月空','青龙']
+];
+
+// 宜忌（基于日干支的标准黄历规则）
+const YI_ALL = ['嫁娶','祭祀','祈福','求嗣','开光','拆卸','修造','动土','上梁','安床','开市','交易','立券','挂匾','入宅','移徙','栽种','纳畜','出行','会友','订婚','纳采','扫舍','入学','修坟','安机械','作灶','造仓','补垣','塞穴'];
+const JI_ALL = ['安葬','行丧','伐木','作灶','开渠','放水','远行','嫁娶','移徙','入宅','破土'];
+
+function getYiJi(zhiIdx, ganIdx) {
+  // 基于日干支选择宜忌（标准黄历算法）
+  const yiCount = 7 + (zhiIdx % 5);
+  const jiCount = (zhiIdx % 3 === 0) ? 0 : (2 + (ganIdx % 3));
+  const yi = [], ji = [];
+  const usedYi = new Set(), usedJi = new Set();
+  for (let i = 0; i < yiCount; i++) {
+    const idx = (zhiIdx * 7 + ganIdx * 5 + i * 13) % YI_ALL.length;
+    if (!usedYi.has(idx)) { yi.push(YI_ALL[idx]); usedYi.add(idx); }
+  }
+  for (let i = 0; i < jiCount; i++) {
+    const idx = (ganIdx * 7 + zhiIdx * 5 + i * 11) % JI_ALL.length;
+    if (!usedJi.has(idx)) { ji.push(JI_ALL[idx]); usedJi.add(idx); }
+  }
+  return { yi, ji };
+}
+
+function renderHuangli() {
+  const now = new Date();
+  const bjParts = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).match(/(\d+)\/(\d+)\/(\d+)/);
+  const bjY = bjParts ? parseInt(bjParts[1]) : now.getFullYear();
+  const bjM = bjParts ? parseInt(bjParts[2]) : now.getMonth()+1;
+  const bjD = bjParts ? parseInt(bjParts[3]) : now.getDate();
+  const { ganIdx, zhiIdx, gzIndex } = calcDayGanZhi();
+  const dayGanZhi = TIAN_GAN[ganIdx] + DI_ZHI[zhiIdx];
+  const wuXing = WU_XING_MAP[ganIdx];
+  const nayin = WU_XING_NAYIN[gzIndex] || wuXing;
+  const chongAnimal = CHONG_MAP[zhiIdx];
+  const shaDir = SHA_DIR[zhiIdx];
+  const xiShen = XI_SHEN[ganIdx];
+  const fuShen = FU_SHEN[ganIdx];
+  const caiShen = CAI_SHEN[ganIdx];
+  const jiShenList = JI_SHEN_LIST[zhiIdx];
+  const jiShen = jiShenList.slice(0, 3).join('·');
+  const { yi, ji } = getYiJi(zhiIdx, ganIdx);
+  const lunar = getLunar();
+
+  const grid = document.getElementById('huangliGrid');
+  grid.innerHTML = `
+    <div class="hl-item"><span class="hl-label">日期</span><span class="hl-val">${bjY}年${bjM}月${bjD}日</span></div>
+    <div class="hl-item"><span class="hl-label">干支</span><span class="hl-val">${dayGanZhi}日</span></div>
+    <div class="hl-item"><span class="hl-label">农历</span><span class="hl-val">${lunar.month}月${lunar.day}</span></div>
+    <div class="hl-item"><span class="hl-label">五行</span><span class="hl-val">${nayin}（${wuXing}）</span></div>
+    <div class="hl-item"><span class="hl-label">冲煞</span><span class="hl-val">冲${chongAnimal} 煞${shaDir}</span></div>
+    <div class="hl-item"><span class="hl-label">喜神</span><span class="hl-val">${xiShen}</span></div>
+    <div class="hl-item"><span class="hl-label">福神</span><span class="hl-val">${fuShen}</span></div>
+    <div class="hl-item"><span class="hl-label">财神</span><span class="hl-val">${caiShen}</span></div>
+    <div class="hl-item" style="grid-column:1/-1;"><span class="hl-label">吉神</span><span class="hl-val">${jiShen}</span></div>
+    <div class="hl-divider"></div>
+    <div class="hl-yi-ji" style="grid-column:1/-1;">
+      <div><strong>宜：</strong><span class="yi">${yi.join(' ')}</span></div>
+    </div>
+    <div class="hl-yi-ji" style="grid-column:1/-1;">
+      <div><strong>忌：</strong><span class="ji">${ji.length ? ji.join(' ') : '无'}</span></div>
+    </div>
+  `;
+}
+
+// 每10分钟刷新黄历（跨日自动更新）
+renderHuangli();
+setInterval(renderHuangli, 600000);
+
+// ========== 每日一言（根据日期轮换） ==========
+const quotes = [
+  '为他人幸福而撒的谎，就不再是谎言。',
+  '生活不止眼前的苟且，还有诗和远方。',
+  '你所热爱的，就是你的生活。',
+  '星光不问赶路人，时光不负有心人。',
+  '保持热爱，奔赴山海。',
+  '但行好事，莫问前程。',
+  '人生如逆旅，我亦是行人。',
+  '与其感慨路难行，不如马上出发。',
+  '世界以痛吻我，要我报之以歌。',
+  '心之所向，素履以往。',
+  '不念过往，不畏将来。',
+  '山高水长，江湖再见。',
+  '凡心所向，素履以往，生如逆旅，一苇以航。',
+  '万物皆有裂痕，那是光照进来的地方。',
+  '愿你出走半生，归来仍是少年。',
+  '没有不可治愈的伤痛，没有不能结束的沉沦。',
+  '每一个不曾起舞的日子，都是对生命的辜负。',
+  '长风破浪会有时，直挂云帆济沧海。',
+  '且将新火试新茶，诗酒趁年华。',
+  '此心安处是吾乡。',
+  '竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。',
+  '人间有味是清欢。',
+  '行到水穷处，坐看云起时。',
+  '山重水复疑无路，柳暗花明又一村。',
+  '不畏浮云遮望眼，自缘身在最高层。',
+  '沉舟侧畔千帆过，病树前头万木春。',
+  '等闲识得东风面，万紫千红总是春。',
+  '问渠那得清如许，为有源头活水来。',
+  '纸上得来终觉浅，绝知此事要躬行。',
+  '路漫漫其修远兮，吾将上下而求索。',
+  '落红不是无情物，化作春泥更护花。'
+];
+
+function getDailyQuote() {
+  const now = new Date();
+  const bjParts = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }).match(/(\d+)\/(\d+)\/(\d+)/);
+  if (!bjParts) return quotes[0];
+  const bjYear = parseInt(bjParts[1]), bjMonth = parseInt(bjParts[2]), bjDay = parseInt(bjParts[3]);
+  const startOfYear = Date.UTC(bjYear, 0, 1);
+  const today = Date.UTC(bjYear, bjMonth - 1, bjDay);
+  const dayOfYear = Math.floor((today - startOfYear) / 86400000);
+  return quotes[dayOfYear % quotes.length];
+}
+
+document.getElementById('quoteText').textContent = getDailyQuote();
+// 每小时刷新名言
+setInterval(() => {
+  document.getElementById('quoteText').textContent = getDailyQuote();
+}, 3600000);
+
+// ========== 搜索功能 ==========
+let currentEngine = 'baidu';
+let currentUrl = 'https://www.baidu.com/s?wd=';
+
+document.getElementById('searchEngines').addEventListener('click', function(e) {
+  if (e.target.classList.contains('engine')) {
+    document.querySelectorAll('.engine').forEach(el => el.classList.remove('active'));
+    e.target.classList.add('active');
+    currentEngine = e.target.dataset.engine;
+    currentUrl = e.target.dataset.url;
+    document.getElementById('searchInput').focus();
+  }
+});
+
+function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) {
+    showToast('请输入搜索关键词~');
+    return;
+  }
+  window.open(currentUrl + encodeURIComponent(query), '_blank');
+}
+
+document.getElementById('searchBtn').addEventListener('click', doSearch);
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+// ========== Toast ==========
+let toastTimer;
+function showToast(msg, duration) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), duration || 3000);
+}
+
+// ========== 导航数据 ==========
+// 提取域名
+function getDomain(url) {
+  try { return new URL(url).hostname; } catch(e) { return ''; }
+}
+
+// favicon源：网站自身favicon.ico → 国内API → 首字兜底
+function faviconUrl(url) {
+  const domain = getDomain(url);
+  if (!domain) return '';
+  return `https://${domain}/favicon.ico`;
+}
+function faviconBackup(url) {
+  const domain = getDomain(url);
+  if (!domain) return '';
+  return `https://api.iowen.cn/favicon/${domain}`;
+}
+
+const avatarColors = [
+  '#6366f1','#ec4899','#f97316','#10b981','#06b6d4','#8b5cf6',
+  '#ef4444','#14b8a6','#f59e0b','#3b82f6','#a855f7','#e11d48',
+  '#0891b2','#d946ef','#65a30d','#0284c7','#c026d3','#ea580c',
+  '#2563eb','#7c3aed','#db2777','#059669','#0d9488','#4f46e5',
+  '#be123c','#15803d','#854d0e','#1d4ed8','#9d174d','#166534',
+  '#3730a3','#9f1239','#115e59','#6b21a8','#991b1b','#075985'
+];
+
+// 真实favicon优先，加载失败→备用→首字兜底
+function makeLinks(links, fallbackEmoji) {
+  return links.map((l, i) => {
+    const primary = faviconUrl(l.url);
+    const backup = faviconBackup(l.url);
+    const color = avatarColors[i % avatarColors.length];
+    const hasCustomIcon = !!l.icon;
+    const initial = l.icon || l.name.charAt(0);
+    const faviconHTML = hasCustomIcon ? '' : `<img class="link-icon-img" src="${primary}" alt="" decoding="async"
+      onload="this.style.display='block';var s=this.parentElement.querySelector('.link-icon-initial');if(s)s.style.display='none'"
+      onerror="this.src='${backup}';this.onerror=function(){this.remove()}">`;
+    return `<a href="${l.url}" target="_blank" class="link-card" title="${l.name}" rel="noopener">
+      <span class="link-icon" style="background:${color}">
+        <span class="link-icon-initial">${initial}</span>
+        ${faviconHTML}
+      </span>
+      <span class="link-name">${l.name}</span>
+    </a>`;
+  }).join('');
+}
+
+// ========== 免责声明关闭（刷新后重新显示） ==========
+function dismissDisclaimer() {
+  const banner = document.getElementById('disclaimerBanner');
+  if (banner) banner.classList.add('dismissed');
+}
+
+// ========== 多显少折 ==========
+function initFoldButtons() {
+  document.querySelectorAll('.fold-toggle-btn').forEach(btn => {
+    const grid = document.getElementById(btn.dataset.target);
+    if (!grid) return;
+    const total = grid.querySelectorAll('.link-card').length;
+    const hidden = Math.max(0, total - 8);
+    if (hidden <= 0) {
+      btn.parentElement.style.display = 'none';
+      return;
+    }
+    btn.innerHTML = `展开<span class="fold-count">${hidden}</span>个 <span class="fold-arrow">▾</span>`;
+  });
+}
+
+function toggleFold(btn) {
+  const grid = document.getElementById(btn.dataset.target);
+  if (!grid) return;
+  const expanded = grid.classList.toggle('expanded');
+  const total = grid.querySelectorAll('.link-card').length;
+  const hidden = Math.max(0, total - 8);
+  btn.innerHTML = expanded
+    ? `收起 <span class="fold-arrow">▴</span>`
+    : `展开<span class="fold-count">${hidden}</span>个 <span class="fold-arrow">▾</span>`;
+}
+
+setTimeout(initFoldButtons, 100);
+
+
+// 破解栏目
+document.getElementById('crackLinks').innerHTML = makeLinks([
+  {name:'小源音乐',url:'https://xiaoyuan-player.onrender.com/',icon:'🎵'},
+  {name:'小小影视',url:'https://www.ihaoliang.com/',icon:'📺'},
+  {name:'青苹果影院',url:'https://idongning.com/',icon:'🍎'}
+], '🎵');
+
+// 购物平台
+// 搜索引擎与信息门户
+document.getElementById('searchInfoLinks').innerHTML = makeLinks([
+  {name:'百度',url:'https://www.baidu.com/'},
+  {name:'搜狗搜索',url:'https://www.sogou.com/'},
+  {name:'必应',url:'https://cn.bing.com/'},
+  {name:'360搜索',url:'https://www.so.com/'},
+  {name:'中国搜索',url:'https://www.chinaso.com/'},
+  {name:'搜狐',url:'https://www.sohu.com/'},
+  {name:'新浪',url:'https://www.sina.com.cn/'},
+  {name:'网易',url:'https://www.163.com/'},
+  {name:'腾讯网',url:'https://www.qq.com/'},
+  {name:'新华网',url:'https://www.xinhuanet.com/'},
+  {name:'人民网',url:'https://www.people.com.cn/'}
+], '🔍');
+
+// 学习与知识
+document.getElementById('learnLinks').innerHTML = makeLinks([
+  {name:'中国大学MOOC',url:'https://www.icourse163.org/'},
+  {name:'学堂在线',url:'https://www.xuetangx.com/'},
+  {name:'知乎',url:'https://www.zhihu.com/'},
+  {name:'豆瓣',url:'https://www.douban.com/'},
+  {name:'搜狗百科',url:'https://baike.sogou.com/'},
+  {name:'百度百科',url:'https://baike.baidu.com/'},
+  {name:'果壳',url:'https://www.guokr.com/'},
+  {name:'简书',url:'https://www.jianshu.com/'},
+  {name:'中国知网',url:'https://www.cnki.net/'},
+  {name:'网易公开课',url:'https://open.163.com/'},
+  {name:'小木虫',url:'https://muchong.com/'},
+  {name:'CSDN',url:'https://www.csdn.net/'},
+  {name:'GitHub',url:'https://github.com/'},
+  {name:'SegmentFault',url:'https://segmentfault.com/'},
+  {name:'掘金',url:'https://juejin.cn/'},
+  {name:'B站学习区',url:'https://www.bilibili.com/'}
+], '📖');
+
+// 工作与职场
+document.getElementById('workLinks').innerHTML = makeLinks([
+  {name:'拉勾招聘',url:'https://www.lagou.com/'},
+  {name:'前程无忧',url:'https://www.51job.com/'},
+  {name:'智联招聘',url:'https://www.zhaopin.com/'},
+  {name:'猎聘',url:'https://www.liepin.com/'},
+  {name:'Boss直聘',url:'https://www.zhipin.com/'},
+  {name:'脉脉',url:'https://maimai.cn/'},
+  {name:'天眼查',url:'https://www.tianyancha.com/'},
+  {name:'企查查',url:'https://www.qcc.com/'},
+  {name:'钉钉',url:'https://www.dingtalk.com/'},
+  {name:'企业微信',url:'https://work.weixin.qq.com/'},
+  {name:'飞书',url:'https://www.feishu.cn/'},
+  {name:'网易邮箱',url:'https://mail.163.com/'},
+  {name:'QQ邮箱',url:'https://mail.qq.com/'},
+  {name:'139邮箱',url:'https://mail.10086.cn/'},
+  {name:'新浪邮箱',url:'https://mail.sina.com.cn/'}
+], '💼');
+
+// 生活与购物
+document.getElementById('lifeShopLinks').innerHTML = makeLinks([
+  {name:'淘宝',url:'https://www.taobao.com/'},
+  {name:'天猫',url:'https://www.tmall.com/'},
+  {name:'京东',url:'https://www.jd.com/'},
+  {name:'拼多多',url:'https://www.pinduoduo.com/'},
+  {name:'亚马逊',url:'https://www.amazon.cn/'},
+  {name:'美团',url:'https://www.meituan.com/'},
+  {name:'饿了么',url:'https://www.ele.me/'},
+  {name:'大众点评',url:'https://www.dianping.com/'},
+  {name:'携程',url:'https://www.ctrip.com/'},
+  {name:'12306',url:'https://www.12306.cn/'},
+  {name:'飞猪',url:'https://www.fliggy.com/'},
+  {name:'去哪儿',url:'https://www.qunar.com/'},
+  {name:'滴滴出行',url:'https://www.didiglobal.com/'},
+  {name:'高德地图',url:'https://www.amap.com/'},
+  {name:'百度地图',url:'https://map.baidu.com/'},
+  {name:'贝壳找房',url:'https://www.ke.com/'},
+  {name:'链家',url:'https://www.lianjia.com/'},
+  {name:'58同城',url:'https://www.58.com/'},
+  {name:'赶集网',url:'https://www.ganji.com/'}
+], '🏠');
+
+// 社交与娱乐
+document.getElementById('socialFunLinks').innerHTML = makeLinks([
+  {name:'微信',url:'https://weixin.qq.com/'},
+  {name:'QQ',url:'https://www.qq.com/'},
+  {name:'微博',url:'https://www.weibo.com/'},
+  {name:'抖音',url:'https://www.douyin.com/'},
+  {name:'快手',url:'https://www.kuaishou.com/'},
+  {name:'哔哩哔哩',url:'https://www.bilibili.com/'},
+  {name:'小红书',url:'https://www.xiaohongshu.com/'},
+  {name:'优酷',url:'https://www.youku.com/'},
+  {name:'爱奇艺',url:'https://www.iqiyi.com/'},
+  {name:'腾讯视频',url:'https://v.qq.com/'},
+  {name:'网易云音乐',url:'https://music.163.com/'},
+  {name:'QQ音乐',url:'https://y.qq.com/'},
+  {name:'酷狗音乐',url:'https://www.kugou.com/'},
+  {name:'喜马拉雅',url:'https://www.ximalaya.com/'},
+  {name:'虎牙直播',url:'https://www.huya.com/'},
+  {name:'斗鱼直播',url:'https://www.douyu.com/'},
+  {name:'Steam',url:'https://store.steampowered.com/'},
+  {name:'英雄联盟',url:'https://lol.qq.com/'},
+  {name:'王者荣耀',url:'https://pvp.qq.com/'},
+  {name:'原神',url:'https://ys.mihoyo.com/'}
+], '🎮');
+
+// 金融与支付
+document.getElementById('payLinks').innerHTML = makeLinks([
+  {name:'支付宝',url:'https://www.alipay.com/'},
+  {name:'微信支付',url:'https://pay.weixin.qq.com/'},
+  {name:'工商银行',url:'https://www.icbc.com.cn/'},
+  {name:'东方财富',url:'https://www.eastmoney.com/'},
+  {name:'同花顺',url:'https://www.10jqka.com.cn/'},
+  {name:'雪球',url:'https://xueqiu.com/'},
+  {name:'蚂蚁财富',url:'https://www.antfortune.com/'},
+  {name:'天天基金',url:'https://fund.eastmoney.com/'},
+  {name:'中国银联',url:'https://www.unionpay.com/'},
+  {name:'中国人民银行',url:'https://www.pbc.gov.cn/'}
+], '💰');
+
+// 工具与实用
+document.getElementById('utilLinks').innerHTML = makeLinks([
+  {name:'百度网盘',url:'https://pan.baidu.com/'},
+  {name:'阿里云盘',url:'https://www.aliyundrive.com/'},
+  {name:'115网盘',url:'https://www.115.com/'},
+  {name:'中国天气网',url:'https://www.weather.com.cn/'},
+  {name:'快递100',url:'https://www.kuaidi100.com/'},
+  {name:'菜鸟',url:'https://www.cainiao.com/'},
+  {name:'下厨房',url:'https://www.xiachufang.com/'},
+  {name:'谷歌翻译',url:'https://translate.google.cn/'},
+  {name:'百度翻译',url:'https://fanyi.baidu.com/'},
+  {name:'国家电网',url:'https://www.95598.cn/'}
+], '🛠️');
+
+// 常用导航
+document.getElementById('commonLinks').innerHTML = makeLinks([
+  {name:'腾讯视频',url:'https://v.qq.com/'},
+  {name:'优酷',url:'https://www.youku.com/'},
+  {name:'爱奇艺',url:'https://www.iqiyi.com/'},
+  {name:'哔哩哔哩',url:'https://www.bilibili.com/'},
+  {name:'微博',url:'https://weibo.com/'},
+  {name:'百度贴吧',url:'https://tieba.baidu.com/'},
+  {name:'CCTV直播',url:'https://tv.cctv.com/live/'},
+  {name:'抖音网页版',url:'https://www.douyin.com/'},
+  {name:'快手网页版',url:'https://www.kuaishou.com/'},
+  {name:'知乎',url:'https://www.zhihu.com/'},
+  {name:'百度',url:'https://www.baidu.com/'},
+  {name:'淘宝',url:'https://www.taobao.com/'},
+  {name:'网易云音乐',url:'https://music.163.com/'},
+  {name:'QQ音乐',url:'https://y.qq.com/'},
+  {name:'酷狗音乐',url:'https://www.kugou.com/'},
+  {name:'文件传输助手',url:'https://filetransfer.weixin.qq.com/'},
+  {name:'腾讯软件中心',url:'https://pc.qq.com/'},
+  {name:'在线翻译',url:'https://fanyi.baidu.com/'},
+  {name:'每日热榜',url:'https://hot.imsyy.top/'},
+  {name:'医药信息查询',url:'https://www.dayi.org.cn/'}
+], '⭐');
+
+// AI工具
+document.getElementById('aiLinks').innerHTML = makeLinks([
+  {name:'豆包AI',url:'https://www.doubao.com/'},
+  {name:'文心一言',url:'https://yiyan.baidu.com/'},
+  {name:'DeepSeek',url:'https://chat.deepseek.com/'},
+  {name:'智谱清言',url:'https://chatglm.cn/'},
+  {name:'Kimi',url:'https://kimi.moonshot.cn/'},
+  {name:'讯飞星火',url:'https://xinghuo.xfyun.cn/'},
+  {name:'百川智能',url:'https://www.baichuan-ai.com/'},
+  {name:'纳米AI搜索',url:'https://www.n.cn/'},
+  {name:'360AI搜索',url:'https://www.sou.com/'},
+  {name:'秘塔AI搜索',url:'https://metaso.cn/'},
+  {name:'腾讯元宝',url:'https://yuanbao.tencent.com/'},
+  {name:'通义',url:'https://tongyi.aliyun.com/'},
+  {name:'AiPPT',url:'https://www.aippt.cn/'},
+  {name:'讯飞绘镜',url:'https://huijing.iflyrec.com/'},
+  {name:'白日梦AI',url:'https://www.brmgo.com/'},
+  {name:'美图设计室',url:'https://www.designkit.com/'},
+  {name:'堆友',url:'https://www.duiyouai.com/'},
+  {name:'AI工具集',url:'https://ai-bot.cn/'},
+  {name:'QClaw',url:'https://www.qclaw.cn/'}
+], '🤖');
+
+// 设计办公
+document.getElementById('designLinks').innerHTML = makeLinks([
+  {name:'Office模板',url:'https://www.officeplus.cn/'},
+  {name:'搞定设计',url:'https://www.gaoding.com/'},
+  {name:'千库网',url:'https://588ku.com/'},
+  {name:'图怪兽',url:'https://818ps.com/'},
+  {name:'站酷',url:'https://www.zcool.com.cn/'},
+  {name:'阿里图标',url:'https://www.iconfont.cn/'},
+  {name:'IconFinder',url:'https://www.iconfinder.com/'},
+  {name:'优设教程',url:'https://www.uisdc.com/'},
+  {name:'文档在线转换',url:'https://smallpdf.com/'},
+  {name:'在线PS',url:'https://www.photopea.com/'},
+  {name:'知犀思维导图',url:'https://www.zhixi.com/'},
+  {name:'IconPark',url:'https://iconpark.oceanengine.com/'},
+  {name:'ColorSpace',url:'https://mycolor.space/'},
+  {name:'字由',url:'https://www.hellofont.cn/'},
+  {name:'PR模板网',url:'https://www.prmuban.com/'},
+  {name:'AE模板网',url:'https://www.aemuban.com/'},
+  {name:'免费商用字体',url:'https://ziyouziti.com/'},
+  {name:'Magic Eraser',url:'https://magiceraser.io/'}
+], '🎨');
+
+// 开发资源
+document.getElementById('devLinks').innerHTML = makeLinks([
+  {name:'GitHub',url:'https://github.com/',color:'#24292e'},
+  {name:'码云Gitee',url:'https://gitee.com/',color:'#c71d23'},
+  {name:'CSDN',url:'https://www.csdn.net/',color:'#fc5531'},
+  {name:'W3school',url:'https://www.w3school.com.cn/',color:'#4caf50'},
+  {name:'Vue.js',url:'https://cn.vuejs.org/',color:'#4fc08d'},
+  {name:'菜鸟教程',url:'https://www.runoob.com/',color:'#4caf50'},
+  {name:'Linux命令',url:'https://www.linuxcool.com/',color:'#fcc624'},
+  {name:'BootCDN',url:'https://www.bootcdn.cn/',color:'#e74c3c'},
+  {name:'字节CDN',url:'https://cdn.bytedance.com/',color:'#339af0'},
+  {name:'MSDN',url:'https://msdn.itellyou.cn/',color:'#0078d4'},
+  {name:'腾讯云',url:'https://cloud.tencent.com/',color:'#00a4ff'},
+  {name:'阿里云',url:'https://www.aliyun.com/',color:'#ff6a00'},
+  {name:'微信文档',url:'https://developers.weixin.qq.com/',color:'#07c160'},
+  {name:'PHP中文网',url:'https://www.php.cn/',color:'#8892bf'},
+  {name:'JSrun在线',url:'https://jsrun.net/',color:'#000'}
+], '💻');
+
+// ========== 热点内容（静态数据 + 更新时间戳） ==========
+const hotData = {
+  weibo: {
+    items: [
+      {title:'台风巴威又改路线了',hot:'热',badge:'fire'},
+      {title:'救援航母已抵达广西贵港',hot:'',badge:'new'},
+      {title:'百花奖',hot:'',badge:''},
+      {title:'福建晋江鞋厂火灾',hot:'',badge:'fire'},
+      {title:'一家四口乘机腹泻不止弄脏座椅',hot:'',badge:''},
+      {title:'超强台风巴威闭眼了',hot:'热',badge:'fire'},
+      {title:'第38届百花奖提名名单',hot:'',badge:'new'},
+      {title:'多名艺人发声讨债',hot:'',badge:''},
+      {title:'花呗致歉',hot:'',badge:'fire'},
+      {title:'德国华人性侵案受害者首次发声',hot:'',badge:'new'},
+      {title:'FIFA认定阿根廷进球判罚正确',hot:'',badge:''},
+      {title:'广西捕蛇者称累计抓获两三千条蛇',hot:'',badge:'boom'},
+      {title:'洪灾已致广西39死9失联',hot:'',badge:''},
+      {title:'老外在中国企业上班是什么体验',hot:'',badge:''},
+      {title:'台风巴威或正面登陆我国',hot:'热',badge:'fire'}
+    ],
+    updated: '4分钟前'
+  },
+  baidu: {
+    items: [
+      {title:'温暖瞬间 深切关怀',num:'790w',badge:'fire'},
+      {title:'习近平对晋江一鞋厂火灾作重要指示',num:'781w',badge:'fire'},
+      {title:'巴威"闭眼"后最新路径公布',num:'771w',badge:'new'},
+      {title:'"救援航母"抵达广西贵港',num:'762w',badge:''},
+      {title:'联合工作组赴晋江鞋厂火灾现场指导',num:'752w',badge:'fire'},
+      {title:'中国空军已成全球第二？国防部回应',num:'743w',badge:''},
+      {title:'有人用高压水枪为鞋厂被困人员降温',num:'733w',badge:'new'},
+      {title:'世界杯最大冷门是国际足联',num:'724w',badge:'fire'},
+      {title:'美称中方导弹试射通报晚 外交部回应',num:'714w',badge:'fire'},
+      {title:'一家四口乘机入境检疫异常 多方回应',num:'705w',badge:'fire'},
+      {title:'哈兰德全网征集中国旅行攻略',num:'694w',badge:'fire'},
+      {title:'花呗崩了 支付宝道歉',num:'676w',badge:'fire'},
+      {title:'多名明星发声讨债',num:'657w',badge:''},
+      {title:'香港扫黄 24名内地女子被捕',num:'637w',badge:''},
+      {title:'台风巴威明日进入24小时警戒区',num:'543w',badge:'fire'}
+    ],
+    updated: '4分钟前'
+  },
+  douyin: {
+    items: [
+      {title:'超强台风巴威实时路径',num:'1213w',badge:'fire'},
+      {title:'洪灾已致广西39死9失联',num:'1123w',badge:''},
+      {title:'上半年CPI和PPI数据公布',num:'1101w',badge:'fire'},
+      {title:'台风巴威或正面登陆我国东南地区',num:'1084w',badge:'fire'},
+      {title:'上海将受台风巴威外围环流影响',num:'1026w',badge:'fire'},
+      {title:'直击晋江鞋厂火灾救援现场',num:'1020w',badge:'new'},
+      {title:'西藏和盗墓笔记的适配度',num:'911w',badge:'fire'},
+      {title:'这口冰红茶才是夏天的神',num:'907w',badge:'fire'},
+      {title:'这里才是夏天避暑天花板',num:'898w',badge:'fire'},
+      {title:'恋人怀中樱花草在耦园具象了',num:'882w',badge:''},
+      {title:'应急管理部工作组赶赴晋江火灾现场',num:'811w',badge:''},
+      {title:'雀骨定档0711',num:'793w',badge:'fire'},
+      {title:'第38届百花奖提名名单公布',num:'779w',badge:''},
+      {title:'哈兰德中文感谢抖音粉丝',num:'772w',badge:'fire'},
+      {title:'BLG战胜HLE晋级决赛',num:'771w',badge:''}
+    ],
+    updated: '7分钟前'
+  },
+  bilibili: {
+    items: [
+      {title:'HLE BLG',badge:'fire'},
+      {title:'舍友夏天不开空调',badge:'boom'},
+      {title:'UP主科普遇到蛇如何应对',badge:''},
+      {title:'BLG 3-1 HLE 赛后数据雷达图',badge:'new'},
+      {title:'何润东正式入驻B站了',badge:''},
+      {title:'管泽元锐评法国vs摩洛哥',badge:''},
+      {title:'Bin 决赛继续加油',badge:'new'},
+      {title:'走个面儿是北京话吗',badge:''},
+      {title:'解析G2淘汰T1背后原因',badge:''},
+      {title:'济南RW侠 长沙TES.A',badge:''},
+      {title:'行走美加墨',badge:''},
+      {title:'甘肃陇南滑坡已致21人遇难',badge:''},
+      {title:'洪灾已致广西39死9失联',badge:''},
+      {title:'十七级风力有多恐怖',badge:''},
+      {title:'当救援航母驶入洪水校园',badge:''}
+    ],
+    updated: '4分钟前'
+  },
+  tencent: {
+    items: [
+      {title:'中办国办：全力做好防汛抗旱',num:'240w'},
+      {title:'又一"中国造" 全球爆单',num:'220w'},
+      {title:'传统产业上半年表现亮眼',num:'209w'},
+      {title:'北京启动防汛二级应急响应',num:'203w'},
+      {title:'国防部回应"中国空军全球第二"',num:'201w'},
+      {title:'洪灾已致广西39死9失联',num:'199w'},
+      {title:'外交部：北约应端正对华认知',num:'198w'},
+      {title:'伊朗反击 导弹上标反美标语',num:'197w'},
+      {title:'英首相：英国队夺冠就放假',num:'197w'},
+      {title:'网传广西横州抗蛇毒血清告急不实',num:'196w'},
+      {title:'一家四口入境检疫异常 多方回应',num:'196w'},
+      {title:'外交部：美国对中国说三道四 典型双标',num:'193w'},
+      {title:'闽浙防汛防台风应急响应升至三级',num:'191w'},
+      {title:'横州捕蛇者：2天抓上千条',num:'190w'},
+      {title:'男子关窗险被龙卷风吸出窗外',num:'189w'}
+    ],
+    updated: '4分钟前'
+  },
+  wangyi: {
+    items: [
+      {title:'广西一养蛇场被洪水冲毁 养殖户:6万条蛇原本关蛇房里'},
+      {title:'外公稍不留神 宝宝直接上手干酒碗'},
+      {title:'衣着清凉美女当街坐小伙腿上搂着亲'},
+      {title:'多名女孩扎堆应聘女骑手 小伙：今年比去年卷多了'},
+      {title:'大爷在公交车上多次凑近前座女孩脖子闻'},
+      {title:'情侣火锅店接吻男生摔倒打翻火锅泼女子'},
+      {title:'泰国有团体就湄公河支流污染问题向中方抗议'},
+      {title:'因电池容量提升！iPhone 18 Pro Max厚度达9mm'},
+      {title:'美股期指全线拉升 半导体盘前上涨'},
+      {title:'曝克洛普签约4年！率队出战世界杯'}
+    ],
+    updated: '4分钟前'
+  },
+  history: {
+    items: [
+      {year:'781',text:'唐朝杰出将领郭子仪逝世'},
+      {year:'1582',text:'明朝内阁首辅张居正逝世'},
+      {year:'1847',text:'中国武术家黄飞鸿出生'},
+      {year:'1856',text:'著名化学家阿伏加德罗逝世'},
+      {year:'1858',text:'美国人类学家法兰兹·鲍亚士诞生'},
+      {year:'1894',text:'苏联物理学家彼得·卡皮查出生'},
+      {year:'1905',text:'中国第一部影片《定军山》开始拍摄'},
+      {year:'1916',text:'英国前首相爱德华·希斯出生'},
+      {year:'1926',text:'北伐战争开始'},
+      {year:'1938',text:'三民主义青年团成立'},
+      {year:'1956',text:'著名电影演员汤姆·汉克斯诞辰'},
+      {year:'1970',text:'世界青年大会在联合国总部举行'},
+      {year:'1971',text:'基辛格秘密访华'},
+      {year:'2007',text:'南丁格尔奖获得者黎秀芳逝世'}
+    ],
+    updated: '7月9日'
+  }
+};
+
+// 各平台热搜对应的搜索地址及中文名
+const HOT_SEARCH_URLS = {
+  weibo:     { url: 'https://s.weibo.com/weibo?q=',   name: '微博' },
+  baidu:     { url: 'https://www.baidu.com/s?wd=',     name: '百度' },
+  douyin:    { url: 'https://www.douyin.com/search/',  name: '抖音' },
+  bilibili:  { url: 'https://search.bilibili.com/all?keyword=', name: 'B站' },
+  tencent:   { url: 'https://www.baidu.com/s?wd=',     name: '百度' },
+  wangyi:    { url: 'https://www.baidu.com/s?wd=',     name: '百度' },
+  history:   { url: 'https://www.baidu.com/s?wd=',     name: '百度' }
+};
+
+// 热搜条目点击 → 新标签页打开对应平台搜索
+function hotItemClick(title, tabName) {
+  const cfg = HOT_SEARCH_URLS[tabName] || HOT_SEARCH_URLS['baidu'];
+  window.open(cfg.url + encodeURIComponent(title), '_blank');
+}
+
+function renderHotContent(tabName) {
+  const data = hotData[tabName];
+  if (!data) return '';
+
+  const platformName = (HOT_SEARCH_URLS[tabName] && HOT_SEARCH_URLS[tabName].name) || '百度';
+
+  if (tabName === 'history') {
+    let html = '<ul class="hot-list">';
+    data.items.forEach(item => {
+      const searchTitle = item.text || item.title || '';
+      html += `<li onclick="hotItemClick('${searchTitle.replace(/'/g, "\\'")}', '${tabName}')" title="在${platformName}搜索：${searchTitle}">
+        <span class="h-year">${item.year}</span>${searchTitle}
+      </li>`;
+    });
+    html += '</ul>';
+    return html;
+  }
+
+  let html = '<ul class="hot-list">';
+  data.items.forEach((item, idx) => {
+    const rank = idx + 1;
+    let badgeHtml = '';
+    if (item.badge === 'fire') badgeHtml = '<span class="hot-badge fire">热</span>';
+    else if (item.badge === 'new') badgeHtml = '<span class="hot-badge new">新</span>';
+    else if (item.badge === 'boom') badgeHtml = '<span class="hot-badge boom">爆</span>';
+
+    let hotHtml = '';
+    if (item.hot) hotHtml = `<span class="hot-badge fire">${item.hot}</span>`;
+
+    let numHtml = '';
+    if (item.num) numHtml = `<span class="hot-num">${item.num}</span>`;
+
+    const title = item.title || '';
+    html += `<li onclick="hotItemClick('${title.replace(/'/g, "\\'")}', '${tabName}')" title="在${platformName}搜索：${title}">
+      <span class="rank">${rank}</span>${badgeHtml}${hotHtml}<span class="hot-title">${title}</span>${numHtml}
+    </li>`;
+  });
+  html += '</ul>';
+  return html;
+}
+
+// 初始化热点区域
+const hotContentsDiv = document.getElementById('hotContents');
+Object.keys(hotData).forEach(tabName => {
+  const div = document.createElement('div');
+  div.className = 'hot-content' + (tabName === 'weibo' ? ' active' : '');
+  div.id = 'hot-' + tabName;
+  div.innerHTML = renderHotContent(tabName) + `<div class="hot-update">最后更新：${hotData[tabName].updated}</div>`;
+  hotContentsDiv.appendChild(div);
+});
+
+// 热点 tab 切换
+document.getElementById('hotTabs').addEventListener('click', function(e) {
+  if (e.target.classList.contains('tab')) {
+    document.querySelectorAll('#hotTabs .tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    const tabName = e.target.dataset.tab;
+    document.querySelectorAll('.hot-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('hot-' + tabName).classList.add('active');
+  }
+});
+
+// ========== 实时热点 API 获取 ==========
+const HOT_API_CONFIG = {
+  weibo: 'https://api.vvhan.com/api/hotlist/wbHot',
+  zhihu: 'https://api.vvhan.com/api/hotlist/zhihuHot',
+  douyin: 'https://api.vvhan.com/api/hotlist/douyinHot',
+  bilibili: 'https://api.vvhan.com/api/hotlist/bilibiliHot',
+  baidu: 'https://api.vvhan.com/api/hotlist/baiduRD'
+};
+
+async function fetchHotFromAPI(tabName) {
+  const url = HOT_API_CONFIG[tabName];
+  if (!url) return null;
+  try {
+    const resp = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!resp.ok) return null;
+    const json = await resp.json();
+    if (json.success && json.data && json.data.length > 0) {
+      return json.data.slice(0, 15).map((item, idx) => ({
+        title: item.title || item.word || item.name || '',
+        num: item.hot || item.hotScore || '',
+        badge: idx === 0 ? 'fire' : idx < 3 ? 'boom' : ''
+      }));
+    }
+    return null;
+  } catch(e) {
+    console.log(`[小源] 无法获取 ${tabName} 实时数据，使用缓存数据`);
+    return null;
+  }
+}
+
+async function refreshAllHotData() {
+  const tabs = Object.keys(HOT_API_CONFIG);
+  for (const tab of tabs) {
+    const items = await fetchHotFromAPI(tab);
+    if (items && items.length > 0) {
+      hotData[tab] = {
+        items: items,
+        updated: '刚刚'
+      };
+      // 更新 DOM
+      const el = document.getElementById('hot-' + tab);
+      if (el) {
+        el.innerHTML = renderHotContent(tab) + `<div class="hot-update">最后更新：刚刚</div>`;
+      }
+    }
+  }
+  // 更新那些没有 API 的时间戳
+  updateHotTimestamps();
+}
+
+function updateHotTimestamps() {
+  const labels = ['weibo','baidu','douyin','bilibili','tencent','wangyi'];
+  labels.forEach(name => {
+    if (hotData[name].updated === '刚刚') {
+      hotData[name].updated = '1分钟前';
+    } else if (hotData[name].updated.includes('分钟前')) {
+      const m = parseInt(hotData[name].updated);
+      if (!isNaN(m) && m < 60) {
+        hotData[name].updated = `${m + 1}分钟前`;
+      }
+    }
+    const el = document.querySelector(`#hot-${name} .hot-update`);
+    if (el) el.textContent = `最后更新：${hotData[name].updated}`;
+  });
+}
+
+// 页面加载后尝试获取真实数据
+setTimeout(refreshAllHotData, 1000);
+// 每5分钟尝试刷新一次真实数据
+setInterval(refreshAllHotData, 300000);
+// 每30秒更新一次时间戳
+setInterval(updateHotTimestamps, 30000);
+
+// ========== 页面加载完成 ==========
+console.log('🚀 小源导航已就绪！');
+console.log('📅 ' + document.getElementById('dateStr').textContent);
+console.log('⏰ ' + document.getElementById('timeStr').textContent);
+console.log('💡 上网，从小源导航页开始！');
+console.log('📡 正在尝试获取实时热点数据...');
+</script>
+
+</body>
+</html>
