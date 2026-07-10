@@ -1,2 +1,8 @@
-# 未加密的源代码备份（敏感文件，防止泄露）
+# 未加密源代码（敏感，切勿提交）
+source.html
 index.html.bak
+
+# 临时调试文件
+verify.js
+check.js
+test_marker.js
