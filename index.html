@@ -969,9 +969,10 @@ function updateClock() {
   const bj = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false });
   const m = bj.match(/(\d+)\/(\d+)\/(\d+) (\d+):(\d+):(\d+)/);
   if (!m) return;
+  // 用UTC计算北京时间的星期（北京时间 = UTC+8，且星期不受时区影响因为day边界一致）
+  const bjDate = new Date(Date.UTC(parseInt(m[1]), parseInt(m[2])-1, parseInt(m[3])));
   const weekNames = ['日','一','二','三','四','五','六'];
-  const d = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' }));
-  const w = weekNames[d.getDay()];
+  const w = weekNames[bjDate.getUTCDay()];
   document.getElementById('dateStr').textContent = `${m[1]}年${m[2]}月${m[3]}日 星期${w}`;
   document.getElementById('timeStr').textContent = `${m[4]}:${m[5]}:${m[6]}`;
 }
